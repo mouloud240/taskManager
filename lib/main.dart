@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(fontFamily: "Sofia Pro"),
         routes: {
           'home': (context) => const Homepage(),
-          "login": (context) => Loginpage(),
+          "login": (context) => LoginPage(),
           "signUp": (context) => SignupPage(),
         },
         home: StreamBuilder(
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               } else {
-                return Loginpage();
+                return LoginPage();
               }
             }));
   }
