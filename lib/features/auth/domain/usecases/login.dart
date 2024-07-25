@@ -3,12 +3,12 @@ import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/domain/entities/user.dart';
 import 'package:task_manager/features/auth/domain/repositories/user_auth_repository.dart';
 
-class Login {
+class LoginUsecase {
   final UserAuthRepository repository;
 
-  Login(this.repository);
+  LoginUsecase(this.repository);
 
-  Future<Either<Failure, void>> call(User user) async {
-    return await repository.login(user);
+  Future<Either<Failure, bool>> call(String email, String password) async {
+    return await repository.login(email, password);
   }
 }
