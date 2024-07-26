@@ -1,23 +1,30 @@
+import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:task_manager/core/connection/network_info.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
 import 'package:task_manager/features/auth/presentation/screens/Welcomepage.dart';
 import 'package:task_manager/features/auth/presentation/screens/authpages/Signup.dart';
 import 'package:task_manager/features/auth/presentation/screens/authpages/loginpage.dart';
-import 'package:task_manager/features/auth/presentation/screens/introductionScreens/get_started.dart';
+import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
+import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
+import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
 import 'package:task_manager/firebase_options.dart';
 
 void main() async {
   Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(PrioritytaskmodelAdapter());
+  Hive.registerAdapter(MinitaskmodelAdapter());
+  Hive.registerAdapter(DailtaskmodelAdapter());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,24 +33,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final connectionInfo = NetworkInfoImpl(DataConnectionChecker());
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: "Sofia Pro"),
         routes: {
-          'home': (context) => Homepage(),
-          "login": (context) => LoginPage(),
-          "signUp": (context) => SignupPage(),
+          "login": (context) =>  const LoginPage(),
+          'home': (context) =>   const Homepage(),
+          "signUp": (context) => const SignupPage(),
         },
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, AsyncSnapshot<User?> snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
-                return Homepage();
+                return const Homepage();
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else {
-                return Welcomepage();
+                return const  Welcomepage();
               }
             }));
   }

@@ -13,24 +13,6 @@ class Prioritytask extends Task {
       required super.startDate,
       required super.endDate});
 
-  factory Prioritytask.fromJson(Map<String, dynamic> json) {
-    return Prioritytask(
-        icon: json['icon'],
-        miniTasksList: json['miniTaskList'],
-        title: json['title'],
-        description: json['description'],
-        startDate: json['startDate'],
-        endDate: json['endDate']);
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'icon': icon,
-      "minTaskList": miniTasksList,
-      'title': title,
-      "description": description,
-      'startDate': startDate,
-      'endDate': endDate
-    };
-  }
+ 
 }
