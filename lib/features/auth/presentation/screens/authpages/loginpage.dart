@@ -2,25 +2,27 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:dartz/dartz.dart' as prefix;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
 import 'package:task_manager/features/auth/domain/usecases/login.dart';
 import 'package:task_manager/features/auth/presentation/screens/authpages/forgotPassword.dart';
+import 'package:task_manager/features/auth/presentation/state/userState.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final RegExp passRegex =
       RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
   final RegExp mailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  bool passwordVisible = false;
+  bool passwordVisible = true;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth());
@@ -202,7 +204,10 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         }
                       } else {
-                        Navigator.of(context).pushNamed('home');
+                        ref.refresh(userStateProvider);
+                        Future.delayed(Duration(microseconds: 1000), () {
+                          Navigator.of(context).pushNamed('home');
+                        });
                       }
                     }
                   },

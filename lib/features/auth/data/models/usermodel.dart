@@ -9,7 +9,7 @@ part 'usermodel.g.dart';
 @HiveType(typeId: 0)
 class UserModel extends User with HiveObjectMixin {
   @HiveField(0)
-  final int? uid;
+  final String? uid;
   @HiveField(1)
   final String password;
 
@@ -18,7 +18,7 @@ class UserModel extends User with HiveObjectMixin {
   @HiveField(3)
   final String email;
 
-  @HiveField(3)
+  @HiveField(4)
   final File? image;
   UserModel({
     this.uid,

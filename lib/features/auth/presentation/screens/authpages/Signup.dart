@@ -23,7 +23,8 @@ class _SignupPageState extends State<SignupPage> {
   final userauthImpl = UserAuthRepositoryImplementation(RemoteAuth());
   final Color blueColor = const Color(0xFF007BFF);
   RegExp passRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-  RegExp mailRegex = RegExp( r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp mailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -176,23 +177,23 @@ class _SignupPageState extends State<SignupPage> {
                             await Signup(userauthImpl).call(User(
                                 username: usernameController.text,
                                 password: passwordController.text,
-                                email: emailController.text) );
+                                email: emailController.text));
                         result.fold((failure) {
-                          if (failure != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  failure.errMessage,
-                                ),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                failure.errMessage,
                               ),
-                            );
-                          }
+                            ),
+                          );
                         }, (usercred) {
                           db.collection("users").doc(usercred.user!.uid).set({
                             "username": usernameController.text,
                             "email": emailController.text,
                             "password": passwordController.text
                           });
+                         
+
                           // LoginUsecase(userauthImpl).call(emailController.text, passwordController.text);
                           Navigator.of(context).pushNamed("home");
                         });
