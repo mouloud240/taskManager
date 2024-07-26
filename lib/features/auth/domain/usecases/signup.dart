@@ -8,7 +8,7 @@ import 'package:task_manager/features/auth/domain/repositories/user_auth_reposit
 class Signup {
   UserAuthRepository repository;
   Signup(this.repository);
-  Future<Either<Failure, auth.UserCredential>> call(User user) async {
+  Future<Either<Failure, auth.UserCredential>> call(UserModel user) async {
     return repository.signup(user);
   }
 }

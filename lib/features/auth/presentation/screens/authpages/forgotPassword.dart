@@ -1,21 +1,21 @@
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
 import 'package:task_manager/features/auth/domain/usecases/resetpassword.dart';
 import 'package:task_manager/features/auth/presentation/screens/authpages/Signup.dart';
+import 'package:task_manager/features/auth/presentation/state/userState.dart';
 
-class Forgotpassword extends StatefulWidget {
+class Forgotpassword extends ConsumerStatefulWidget {
   const Forgotpassword({super.key});
 
   @override
-  State<Forgotpassword> createState() => _ForgotpasswordState();
+  _ForgotpasswordState createState() => _ForgotpasswordState();
 }
 
-class _ForgotpasswordState extends State<Forgotpassword> {
-  final UserAuthRepositoryImplementation _userAuthRepositoryImplementation =
-      UserAuthRepositoryImplementation(RemoteAuth());
+class _ForgotpasswordState extends ConsumerState<Forgotpassword> {
   final emailController = TextEditingController();
   final RegExp mailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -23,6 +23,8 @@ class _ForgotpasswordState extends State<Forgotpassword> {
 
   @override
   Widget build(BuildContext context) {
+    final UserAuthRepositoryImplementation _userAuthRepositoryImplementation =
+        UserAuthRepositoryImplementation(RemoteAuth(ref:ref));
     return Container(
       height: MediaQuery.of(context).size.height * 0.3,
       child: Form(

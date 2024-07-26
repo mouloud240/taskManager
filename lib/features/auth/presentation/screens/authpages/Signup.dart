@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
@@ -11,16 +12,16 @@ import 'package:task_manager/features/auth/domain/entities/user.dart';
 import 'package:task_manager/features/auth/domain/repositories/user_auth_repository.dart';
 import 'package:task_manager/features/auth/domain/usecases/signup.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final db = FirebaseFirestore.instance;
-  final userauthImpl = UserAuthRepositoryImplementation(RemoteAuth());
+
   final Color blueColor = const Color(0xFF007BFF);
   RegExp passRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
   RegExp mailRegex = RegExp(
@@ -33,6 +34,7 @@ class _SignupPageState extends State<SignupPage> {
   bool passwordVisible = true;
   @override
   Widget build(BuildContext context) {
+    final userauthImpl = UserAuthRepositoryImplementation(RemoteAuth(ref: ref));
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -174,7 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         dartz.Either<Failure, auth.UserCredential> result =
-                            await Signup(userauthImpl).call(User(
+                            await Signup(userauthImpl).call(UserModel(
                                 username: usernameController.text,
                                 password: passwordController.text,
                                 email: emailController.text));
@@ -192,7 +194,6 @@ class _SignupPageState extends State<SignupPage> {
                             "email": emailController.text,
                             "password": passwordController.text
                           });
-                         
 
                           // LoginUsecase(userauthImpl).call(emailController.text, passwordController.text);
                           Navigator.of(context).pushNamed("home");

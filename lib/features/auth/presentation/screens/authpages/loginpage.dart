@@ -25,10 +25,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   bool passwordVisible = true;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth());
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth(ref:ref));
     return Scaffold(
       backgroundColor: Colors.white,
       body: SizedBox.expand(

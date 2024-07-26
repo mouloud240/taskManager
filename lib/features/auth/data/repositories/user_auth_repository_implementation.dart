@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
-import 'package:task_manager/features/auth/domain/entities/user.dart';
 import 'package:task_manager/features/auth/domain/repositories/user_auth_repository.dart';
 
 class UserAuthRepositoryImplementation implements UserAuthRepository {
@@ -30,7 +29,7 @@ class UserAuthRepositoryImplementation implements UserAuthRepository {
   }
 
   @override
-  Future<Either<Failure, auth.UserCredential>> signup(User user) async {
+  Future<Either<Failure, auth.UserCredential>> signup(UserModel user) async {
     return await remoteAuth.signup(user);
   }
 

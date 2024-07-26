@@ -45,7 +45,7 @@ class _HomepageState extends ConsumerState<Homepage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  LogoutUsecase(UserAuthRepositoryImplementation(RemoteAuth()))
+                  LogoutUsecase(UserAuthRepositoryImplementation(RemoteAuth(ref: ref)))
                       .call();
 
                   Navigator.of(context).pushNamed('login');
