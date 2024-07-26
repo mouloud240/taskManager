@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
@@ -14,38 +15,23 @@ class UserAuthRepositoryImplementation implements UserAuthRepository {
   UserAuthRepositoryImplementation(this.remoteAuth);
   @override
   Future<Either<Failure, void>> changePassword(String password) async {
-    try {
-      return right(remoteAuth.changePassword(password));
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
-    }
+    // ignore: void_checks
+    return right(remoteAuth.changePassword(password));
   }
 
   @override
   Future<Either<Failure, bool>> login(String email, String password) async {
-    try {
-      return right(await remoteAuth.login(email, password));
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
-    }
+    return await remoteAuth.login(email, password);
   }
 
   @override
   Future<Either<Failure, void>> logout() async {
-    try {
-      return right(remoteAuth.logout());
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
-    }
+    return remoteAuth.logout();
   }
 
   @override
-  Future<Either<Failure, void>> signup(User user) async {
-    try {
-      return right(remoteAuth.signup(user as UserModel));
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
-    }
+  Future<Either<Failure, auth.UserCredential>> signup(User user) async {
+    return await remoteAuth.signup(user);
   }
 
   @override
@@ -57,5 +43,10 @@ class UserAuthRepositoryImplementation implements UserAuthRepository {
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(String email) async {
+    return remoteAuth.resetPassword(email);
   }
 }

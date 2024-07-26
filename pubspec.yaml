@@ -45,6 +45,7 @@ dependencies:
   dartz: ^0.10.1
   data_connection_checker_tv: ^0.3.5-nullsafety
   firebase_auth:
+  cloud_firestore: ^5.1.0
  
 
 dev_dependencies:

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: "Sofia Pro"),
         routes: {
-          'home': (context) => const Homepage(),
+          'home': (context) => Homepage(),
           "login": (context) => LoginPage(),
           "signUp": (context) => SignupPage(),
         },
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               } else {
-                return LoginPage();
+                return Welcomepage();
               }
             }));
   }

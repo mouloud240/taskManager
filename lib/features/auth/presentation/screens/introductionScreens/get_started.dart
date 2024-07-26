@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class welcomePages {
   static final firstpage = PageViewModel(
+    
       title: "Easy Time Management",
       body:
           "With management based on priority and daily tasks, it will give you convenience in managing and determining the tasks that must be done first ",

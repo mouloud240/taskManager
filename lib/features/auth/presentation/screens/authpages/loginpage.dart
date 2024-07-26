@@ -6,189 +6,232 @@ import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
 import 'package:task_manager/features/auth/domain/usecases/login.dart';
+import 'package:task_manager/features/auth/presentation/screens/authpages/forgotPassword.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final RegExp passRegex =
+      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+  final RegExp mailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   bool passwordVisible = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth());
-
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SizedBox.expand(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "TASK-WAN",
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                fontSize: 35,
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "TASK-WAN",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                ),
               ),
-            ),
-            const Text(
-              "Management App",
-              style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+              const Text(
+                "Management App",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            const Text(
-              "Login to your account",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: "Email  ",
-                    prefixIcon: Container(
-                      height: MediaQuery.of(context).size.height * 0.065,
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          bottomLeft: Radius.circular(10.0),
+              const Text(
+                "Login to your account",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Field required";
+                      } else if (!mailRegex.hasMatch(value)) {
+                        return "Email not valid";
+                      } else {
+                        return null;
+                      }
+                    },
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      hintText: "Email  ",
+                      prefixIcon: Container(
+                        height: MediaQuery.of(context).size.height * 0.065,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0),
+                          ),
                         ),
+                        child: const Icon(Icons.email, color: Colors.white),
                       ),
-                      child: const Icon(Icons.email, color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: passwordVisible,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          passwordVisible = !passwordVisible;
-                        });
-                      },
-                      icon: Icon(
-                        passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    hintText: "Password",
-                    prefixIcon: Container(
-                      height: MediaQuery.of(context).size.height * 0.065,
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          bottomLeft: Radius.circular(10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Field required";
+                      } else if (value.length < 8) {
+                        return "password must be at least 8 chars";
+                      } else if (!passRegex.hasMatch(value)) {
+                        return "password must have at least 1 uppercase and lowercase";
+                      }
+                    },
+                    controller: passwordController,
+                    obscureText: passwordVisible,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            passwordVisible = !passwordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.blue,
                         ),
                       ),
-                      child: const Icon(Icons.lock, color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                      hintText: "Password",
+                      prefixIcon: Container(
+                        height: MediaQuery.of(context).size.height * 0.065,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0),
+                          ),
+                        ),
+                        child: const Icon(Icons.lock, color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                "Forgot password?",
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.075,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  backgroundColor: WidgetStateProperty.all(Colors.blue),
-                ),
-                onPressed: () async {
-                  final prefix.Either<Failure, bool> result =
-                      await LoginUsecase(userAuthRepo).call(
-                    emailController.text,
-                    passwordController.text,
-                  );
-                  if (result.isLeft()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Login failed",
-                        ),
-                      ),
-                    );
-                  }
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Forgotpassword(),
+                        );
+                      });
                 },
                 child: const Text(
-                  "Login",
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  "Forgot password?",
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don’t have an account?",
-                  style: TextStyle(fontSize: 15),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('signUp');
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.075,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    backgroundColor: WidgetStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      final prefix.Either<Failure, bool> result =
+                          await LoginUsecase(userAuthRepo).call(
+                        emailController.text,
+                        passwordController.text,
+                      );
+                      if (result.isLeft()) {
+                        Failure? failure =
+                            result.fold((failure) => failure, (_) => null);
+                        if (failure != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                failure.errMessage,
+                              ),
+                            ),
+                          );
+                        }
+                      } else {
+                        Navigator.of(context).pushNamed('home');
+                      }
+                    }
                   },
                   child: const Text(
-                    "Signup",
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
+                    "Login",
+                    style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don’t have an account?",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('signUp');
+                    },
+                    child: const Text(
+                      "Signup",
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
