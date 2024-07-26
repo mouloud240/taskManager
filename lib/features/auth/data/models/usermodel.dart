@@ -29,6 +29,13 @@ class UserModel extends User with HiveObjectMixin {
   }) : super(uid: uid, password: password, username: username, email: email);
   factory UserModel.fromEntity(User user) {
     return UserModel(
-        email: user.email, password: user.password, image: user.userPfp,uid: user.uid,username: user.username);
+        email: user.email,
+        password: user.password,
+        image: user.userPfp,
+        uid: user.uid,
+        username: user.username);
+  }
+  User toEntity() {
+    return User(password: password, email: email, uid: uid, username: uid);
   }
 }
