@@ -17,8 +17,8 @@ void main() {
       id: 0,
       icon: Icon(Icons.ac_unit),
       miniTasks: [
-        Minitaskmodel(name: "making first Test", status: true),
-        Minitaskmodel(name: "making second Test", status: false)
+        Minitaskmodel(name: "making first Test", status: true,id: 0),
+        Minitaskmodel(name: "making second Test", status: false,id: 1)
       ],
       title: "Testing function",
       description: "Trying to test the model",

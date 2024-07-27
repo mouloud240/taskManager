@@ -9,23 +9,28 @@ class Minitaskmodel extends Minitask with HiveObjectMixin, EquatableMixin {
   String name;
   @HiveField(1)
   bool status;
-  Minitaskmodel({required this.name, required this.status})
-      : super(name: name, status: status);
+  @HiveField(2)
+  int id;
+  Minitaskmodel({required this.name, this.status = false, required this.id})
+      : super(name: name, status: status, id: id);
   factory Minitaskmodel.fromEntity(Minitask minitask) {
-    return Minitaskmodel(name: minitask.name, status: minitask.status);
+    return Minitaskmodel(
+        name: minitask.name, status: minitask.status, id: minitask.id);
   }
   factory Minitaskmodel.fromJson(Map<String, dynamic> json) {
-    return Minitaskmodel(name: json['name'], status: json['status']);
+    return Minitaskmodel(
+        name: json['name'], status: json['status'], id: json["id"]);
   }
   Map<String, dynamic> toJson() {
     return {
       "name": name,
       "status": status,
+      "id": id,
     };
   }
 
   Minitask toEntity() {
-    return Minitask(name: name, status: status);
+    return Minitask(name: name, status: status, id: id);
   }
 
   @override

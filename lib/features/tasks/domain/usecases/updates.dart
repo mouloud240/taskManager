@@ -26,7 +26,7 @@ class EditTaskInpriorityUsecase {
   EditTaskInpriorityUsecase(this.taskmanagementrepository);
   Future<Either<Failure, void>> call(
       Prioritytask priorityTask, Minitask editedTask) {
-    return taskmanagementrepository.edittaskInPriorityTask(
+    return taskmanagementrepository.editTaskInPriorityTask(
         priorityTask, editedTask);
   }
 }

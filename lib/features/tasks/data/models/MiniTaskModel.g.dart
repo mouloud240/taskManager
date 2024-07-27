@@ -19,6 +19,7 @@ class MinitaskmodelAdapter extends TypeAdapter<Minitaskmodel> {
     return Minitaskmodel(
       name: fields[0] as String,
       status: fields[1] as bool,
+      id:fields[2] as int
     );
   }
 

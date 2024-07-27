@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,6 @@ import 'package:task_manager/features/auth/domain/entities/user.dart'
     as taskManger;
 import 'package:task_manager/features/auth/domain/usecases/logout.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
-import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 
@@ -29,8 +26,8 @@ class _HomepageState extends ConsumerState<Homepage> {
       id: 0,
       icon: Icon(Icons.ac_unit),
       miniTasks: [
-        Minitaskmodel(name: "making first Test", status: true),
-        Minitaskmodel(name: "making second Test", status: false)
+        Minitaskmodel(name: "making first Test", status: true,id: 0),
+        Minitaskmodel(name: "making second Test", status: false,id: 1),
       ],
       title: "Testing function",
       description: "Trying to test the model",
@@ -54,8 +51,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                   user = data;
                 });
                 ;
-
-                return Text("${data!.uid}");
+                return Text("${data!.username}");
               },
               error: (error, stackTrace) => Text(error.toString()),
               loading: () => CircularProgressIndicator(),
@@ -76,7 +72,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                       .doc(user!.uid)
                       .update({"testPriorMiniGen": FieldValue.delete()});
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("Sent data")));
+                      .showSnackBar(SnackBar(content: Text("Deleted data")));
                 },
                 child: Text("ClickMe"))
           ],

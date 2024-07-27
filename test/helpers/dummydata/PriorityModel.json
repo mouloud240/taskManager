@@ -4,11 +4,14 @@
         "miniTasksList": [
           {
             "name": "making first Test",
-            "status": true
+            "status": true,
+            "id":0
           },
           {
             "name": "making second Test",
-            "status": false}
+            "status": false,
+          "id":1
+           }
         ],
             "startDate": "July 27, 2024 at 1:06:24 AM UTC+1",
             "description": "Trying to test the model",

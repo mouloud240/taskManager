@@ -22,7 +22,7 @@ void main() {
     Prioritytask(
         id: 0,
         icon: Icon(Icons.ac_unit),
-        miniTasksList: [Minitask(name: "Run"), Minitask(name: "Walk")],
+        miniTasksList: [Minitask(name: "Run",id: 0), Minitask(name: "Walk",id: 1)],
         title: "run",
         description: "I want the test to fail",
         startDate: DateTime.utc(2024, 7, 26, 23, 12, 28),

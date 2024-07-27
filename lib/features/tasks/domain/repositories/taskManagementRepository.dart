@@ -18,7 +18,7 @@ abstract class Taskmanagementrepository {
   Future<Either<Failure, List<Dailytask>>> getDailyTasks();
   //update
   Future<Either<Failure, void>> addNewtaskInPriorityTask(Prioritytask priortityTask, Minitask newTask);
-  Future<Either<Failure, void>> edittaskInPriorityTask(Prioritytask priorityTask, Minitask editedTask);
+  Future<Either<Failure, void>> editTaskInPriorityTask(Prioritytask priorityTask, Minitask editedTask);
   Future<Either<Failure, void>> updateDailyTasks(List<Dailytask> dailyTasks);
   Future<Either<Failure, void>> updatePriorityTasks(List<Prioritytask> priorityTasks);
   //delete
