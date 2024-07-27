@@ -17,6 +17,13 @@ class Minitaskmodel extends Minitask with HiveObjectMixin, EquatableMixin {
   factory Minitaskmodel.fromJson(Map<String, dynamic> json) {
     return Minitaskmodel(name: json['name'], status: json['status']);
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "status": status,
+    };
+  }
+
   Minitask toEntity() {
     return Minitask(name: name, status: status);
   }

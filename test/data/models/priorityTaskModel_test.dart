@@ -41,4 +41,15 @@ void main() {
     //assert
     expect(result, testPrioTask);
   });
+
+  test("Should return json from a Prioritytaskmodel", () async {
+    //arange
+    final Map<String, dynamic> jsonMap = json.decode(
+      readJson('helpers/dummydata/PriorityModel.json'),
+    );
+    //act
+    final result = testPrioTask.toJson();
+    //assert
+    expect(result, jsonMap);
+  });
 }

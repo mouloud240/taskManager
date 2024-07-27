@@ -48,8 +48,8 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
     return {
       "title": title,
       "description": description,
-      "startDate":startDate,
-      "endDate": endDate
+      "startDate": "${dateFormat.format(startDate)} UTC+1",
+      "endDate": "${dateFormat.format(endDate)} UTC+1",
     };
   }
 
@@ -62,6 +62,5 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [title, description, startDate, endDate];
 }

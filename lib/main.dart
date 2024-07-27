@@ -17,12 +17,13 @@ import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
 import 'package:task_manager/firebase_options.dart';
 
 void main() async {
-  Hive.initFlutter();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  final userBox = await Hive.openBox("User");
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(MinitaskmodelAdapter());
   Hive.registerAdapter(DailtaskmodelAdapter());
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -38,8 +39,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: "Sofia Pro"),
         routes: {
-          "login": (context) =>  const LoginPage(),
-          'home': (context) =>   const Homepage(),
+          "login": (context) => const LoginPage(),
+          'home': (context) => const Homepage(),
           "signUp": (context) => const SignupPage(),
         },
         home: StreamBuilder(
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else {
-                return const  Welcomepage();
+                return const Welcomepage();
               }
             }));
   }

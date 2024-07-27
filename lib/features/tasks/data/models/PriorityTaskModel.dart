@@ -58,15 +58,15 @@ class Prioritytaskmodel extends Prioritytask
     return {
       "title": title,
       "description": description,
-      "startDate": startDate,
-      "endDate": endDate,
-      "MiniTasksList": miniTasks,
-      "icon": icon,
+      "startDate": "${dateFormat.format(startDate)} UTC+1",
+      "endDate": "${dateFormat.format(endDate)} UTC+1",
+      "miniTasksList": [for (var elemnt in miniTasks) elemnt.toJson()],
+      "icon": "",
+      "id": id,
     };
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props =>
       [title, description, startDate, endDate, miniTasks, id];
 }
