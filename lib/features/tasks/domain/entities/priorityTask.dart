@@ -5,7 +5,7 @@ import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
 class Prioritytask extends Task {
   List<Minitask> miniTasksList;
   Icon icon;
-  int id;
+ 
   Prioritytask(
       {required this.icon,
       required this.miniTasksList,
@@ -13,7 +13,7 @@ class Prioritytask extends Task {
       required super.description,
       required super.startDate,
       required super.endDate,
-      required this.id
+      required super.id
       
       });
 

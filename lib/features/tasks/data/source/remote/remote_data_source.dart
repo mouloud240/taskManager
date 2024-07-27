@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +8,6 @@ import 'package:task_manager/features/auth/presentation/state/userState.dart';
 import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
-import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
-import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 
 class RemoteDataSource {
   WidgetRef ref;
@@ -76,7 +76,8 @@ class RemoteDataSource {
           await db.collection("users").doc(data!.uid).update({
             "dailyTasks": FieldValue.arrayUnion([dailyTask.toJson()])
           });
-          return Right(null);
+          // ignore: void_checks
+          return const Right(Unit);
         },
         error: (error, stackTrace) {
           return Left(Failure(errMessage: error.toString()));
@@ -99,7 +100,8 @@ class RemoteDataSource {
           await db.collection('users').doc(data!.uid).update({
             "priorityTasks": FieldValue.arrayUnion([priorityTask.toJson()])
           });
-          return Right(null);
+          // ignore: void_checks
+          return const Right(unit);
         },
         error: (error, stackTrace) =>
             Left(Failure(errMessage: error.toString())),
@@ -113,7 +115,7 @@ class RemoteDataSource {
   }
 
   Future<Either<Failure, void>> addNewtaskInPriorityTask_remote(
-      Prioritytask priorityTask, Minitask newTask) async {
+      Prioritytaskmodel priorityTask, Minitaskmodel newTask) async {
     try {
       final currUser = ref.watch(userStateProvider);
       return currUser.when(data: (data) async {
@@ -121,11 +123,13 @@ class RemoteDataSource {
             await getPriorityTasks_remote();
         return priorityTasks.fold((failure) {
           return left(failure);
-        }, (data) {
-          data[priorityTask.id]
-              .miniTasks
-              .add(Minitaskmodel.fromEntity(newTask));
-          return Right(Null);
+        }, (tasks) {
+          tasks[priorityTask.id].miniTasks.add(newTask);
+          db.collection("users").doc(data!.uid).update(
+              {"priorityTasks": tasks.map((task) => task.toJson()).toList()});
+
+          // ignore: void_checks
+          return const Right(unit);
         });
       }, error: (err, stk) {
         return Future<Either<Failure, void>>.value(
@@ -139,7 +143,7 @@ class RemoteDataSource {
   }
 
   Future<Either<Failure, void>> editTaskInPriorityTask_remote(
-      Prioritytask priorityTask, Minitask editedTask) {
+      Prioritytaskmodel priorityTask, Minitaskmodel editedTask) async {
     try {
       final currUser = ref.watch(userStateProvider);
       return currUser.when(data: (data) async {
@@ -147,22 +151,101 @@ class RemoteDataSource {
             await getPriorityTasks_remote();
         return priorityTasks.fold((failure) {
           return left(failure);
-        }, (data) {
-          data[priorityTask.id].miniTasks[editedTask.id] =
+        }, (tasks) {
+          tasks[priorityTask.id].miniTasks[editedTask.id] =
               Minitaskmodel.fromEntity(editedTask);
 
-          return Right(Null);
+          db.collection("users").doc(data!.uid).update(
+              {"priorityTasks": tasks.map((task) => task.toJson()).toList()});
+
+          // ignore: void_checks
+          return const Right(unit);
         });
       }, error: (err, stk) {
         return Future<Either<Failure, void>>.value(
             Left(Failure(errMessage: err.toString())));
       }, loading: () {
-        return Future<Either<Failure, void>>.value(
-            Left(Failure(errMessage: "Loading")));
+        return Left(Failure(errMessage: "Loading"));
       });
     } catch (e) {
-      return Future<Either<Failure, void>>.value(
-          Left(Failure(errMessage: e.toString())));
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> deleteDailyTask(Dailtaskmodel dailyTask) async {
+    try {
+      final currUser = ref.watch(userStateProvider);
+      return await currUser.when(
+          data: (user) async {
+            // ignore: no_leading_underscores_for_local_identifiers
+            Either<Failure, List<Dailtaskmodel>> _dailyTasks =
+                await getDailyTasks_remote();
+            _dailyTasks.fold((failure) => Left(failure), (dailyTasks) {
+              dailyTasks.removeAt(dailyTask.id);
+              db.collection("users").doc(user!.uid).update({
+                "dailyTasks": dailyTasks.map((task) => task.toJson()).toList()
+              });
+            });
+            // ignore: void_checks
+            return const Right(unit);
+          },
+          error: (error, stackTrace) =>
+              Left(Failure(errMessage: error.toString())),
+          loading: () => Left(Failure(errMessage: "Loading")));
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> deletePriorityTask(
+      Prioritytaskmodel priorityTask) async {
+    try {
+      final currUser = ref.watch(userStateProvider);
+      return currUser.when(
+          data: (user) async {
+            Either<Failure, List<Prioritytaskmodel>> priorityTasks =
+                await getPriorityTasks_remote();
+            priorityTasks.fold((failure) => Left(failure), (priorityTasks) {
+              priorityTasks.removeAt(priorityTask.id);
+              db.collection("users").doc(user!.uid).update({
+                "priorityTasks":
+                    priorityTasks.map((task) => task.toJson()).toList()
+              });
+            });
+            // ignore: void_checks
+            return const Right(unit);
+          },
+          error: (error, stackTrace) =>
+              Left(Failure(errMessage: error.toString())),
+          loading: () => Left(Failure(errMessage: "Loading")));
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> deleteTaskfromPriorityTask(
+      Prioritytaskmodel priorityTask, Minitaskmodel miniTask) async {
+    try {
+      final currUser = ref.watch(userStateProvider);
+      return currUser.when(
+          data: (user) async {
+            Either<Failure, List<Prioritytaskmodel>> priorityTasks =
+                await getPriorityTasks_remote();
+            priorityTasks.fold((failure) => Left(failure), (priorityTasks) {
+              priorityTasks[priorityTask.id].miniTasks.removeAt(miniTask.id);
+              db.collection("users").doc(user!.uid).update({
+                "priorityTasks":
+                    priorityTasks.map((task) => task.toJson()).toList()
+              });
+            });
+            // ignore: void_checks
+            return const Right(unit);
+          },
+          error: (error, stackTrace) =>
+              Left(Failure(errMessage: error.toString())),
+          loading: () => Left(Failure(errMessage: "Loading")));
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
     }
   }
 }

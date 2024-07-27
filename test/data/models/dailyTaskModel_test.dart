@@ -11,14 +11,16 @@ void main() {
     "title": "run",
     "description": "Go running",
     "startDate": "July 27, 2024 at 11:12:43 PM UTC+1",
-    "endDate": "July 26, 2024 at 11:12:28 PM UTC+1"
+    "endDate": "July 26, 2024 at 11:12:28 PM UTC+1",
+    "id": 0
   };
 
   final testDailyTask = Dailtaskmodel(
       title: "run",
       description: "Go running",
       startDate: dateFormat.parse("July 27, 2024 at 11:12:43 PM"),
-      endDate: dateFormat.parse("July 26, 2024 at 11:12:28 PM"));
+      endDate: dateFormat.parse("July 26, 2024 at 11:12:28 PM"),
+      id: 0);
   test("Should be a subclass of DailyTask", () async {
     expect(testDailyTask, isA<Dailytask>());
   });

@@ -21,6 +21,7 @@ class DailtaskmodelAdapter extends TypeAdapter<Dailtaskmodel> {
       description: fields[1] as String,
       startDate: fields[2] as DateTime,
       endDate: fields[3] as DateTime,
+      id:fields[4] as int
     );
   }
 

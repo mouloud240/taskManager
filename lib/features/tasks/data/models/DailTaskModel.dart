@@ -17,24 +17,32 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
   DateTime startDate;
   @HiveField(3)
   DateTime endDate;
+  @HiveField(4)
+  int id;
 
   Dailtaskmodel(
       {required this.title,
       required this.description,
       required this.startDate,
-      required this.endDate})
+      required this.endDate,
+      required this.id
+      })
       : super(
             title: title,
             description: description,
             startDate: startDate,
-            endDate: endDate);
+            endDate: endDate,
+            id: id
+            );
 
   factory Dailtaskmodel.fromEntity(Dailytask dailytask) {
     return Dailtaskmodel(
         title: dailytask.title,
         description: dailytask.description,
         startDate: dailytask.startDate,
-        endDate: dailytask.endDate);
+        endDate: dailytask.endDate,
+        id: dailytask.id
+        );
   }
   factory Dailtaskmodel.fromJson(Map<String, dynamic> json) {
     return Dailtaskmodel(
@@ -42,6 +50,7 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
       description: json['description'],
       startDate: dateFormat.parse(json['startDate'].replaceAll(" UTC+1", "")),
       endDate: dateFormat.parse(json["endDate"].replaceAll(" UTC+1", "")),
+      id: json["id"]
     );
   }
   Map<String, dynamic> toJson() {
@@ -50,6 +59,7 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
       "description": description,
       "startDate": "${dateFormat.format(startDate)} UTC+1",
       "endDate": "${dateFormat.format(endDate)} UTC+1",
+      "id":id
     };
   }
 
@@ -58,9 +68,11 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
         title: title,
         description: description,
         startDate: startDate,
-        endDate: endDate);
+        endDate: endDate,
+        id: id,
+        );
   }
 
   @override
-  List<Object?> get props => [title, description, startDate, endDate];
+  List<Object?> get props => [title, description, startDate, endDate,id];
 }
