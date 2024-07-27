@@ -1,10 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
+import 'package:intl/intl.dart';
 part 'PriorityTaskModel.g.dart';
+
+DateFormat dateFormat = DateFormat("MMMM d, y 'at' h:mm:ss a");
+
 @HiveType(typeId: 3)
-class Prioritytaskmodel extends Prioritytask with HiveObjectMixin {
+class Prioritytaskmodel extends Prioritytask
+    with HiveObjectMixin, EquatableMixin {
   @HiveField(0)
   String title;
   @HiveField(1)
@@ -17,22 +23,36 @@ class Prioritytaskmodel extends Prioritytask with HiveObjectMixin {
   List<Minitaskmodel> miniTasks;
   @HiveField(5)
   Icon icon;
+  @HiveField(6)
+  int id;
   Prioritytaskmodel(
       {required this.icon,
-        required this.title,
+      required this.title,
       required this.description,
       required this.startDate,
       required this.endDate,
-      required this.miniTasks}):super(icon:icon , miniTasksList: miniTasks, title: title, description:description, startDate: startDate, endDate: endDate);
+      required this.miniTasks,
+      required this.id})
+      : super(
+            icon: icon,
+            miniTasksList: miniTasks,
+            title: title,
+            description: description,
+            startDate: startDate,
+            endDate: endDate,
+            id: id);
   factory Prioritytaskmodel.fromJson(Map<String, dynamic> json) {
     return Prioritytaskmodel(
         title: json['title'],
         description: json['description'],
-        startDate: json['startDate'],
-        endDate: json['endDate'],
-        miniTasks: json['miniTasksList'],
-        icon: json['icon']
-        );
+        startDate: dateFormat.parse(json['startDate'].replaceAll(" UTC+1", "")),
+        endDate: dateFormat.parse(json["endDate"].replaceAll(" UTC+1", "")),
+        miniTasks: [
+          for (var elemnt in json['miniTasksList'])
+            Minitaskmodel.fromJson(elemnt)
+        ],
+        icon: Icon(Icons.ac_unit),
+        id: json['id']);
   }
   Map<String, dynamic> toJson() {
     return {
@@ -41,8 +61,12 @@ class Prioritytaskmodel extends Prioritytask with HiveObjectMixin {
       "startDate": startDate,
       "endDate": endDate,
       "MiniTasksList": miniTasks,
-      "icon": icon
+      "icon": icon,
     };
   }
-  //todo fix the mini TasksList
+
+  @override
+  // TODO: implement props
+  List<Object?> get props =>
+      [title, description, startDate, endDate, miniTasks, id];
 }

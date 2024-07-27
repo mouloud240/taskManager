@@ -23,13 +23,14 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       startDate: fields[2] as DateTime,
       endDate: fields[3] as DateTime,
       miniTasks: (fields[4] as List).cast<Minitaskmodel>(),
+      id: fields[6] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Prioritytaskmodel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       ..writeByte(4)
       ..write(obj.miniTasks)
       ..writeByte(5)
-      ..write(obj.icon);
+      ..write(obj.icon)
+      ..writeByte(6)
+      ..write(obj.id);
   }
 
   @override

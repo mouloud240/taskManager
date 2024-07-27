@@ -1,24 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 
 part 'DailTaskModel.g.dart';
-@HiveType(typeId: 1)
 
-class Dailtaskmodel extends Dailytask with HiveObjectMixin {
+@HiveType(typeId: 1)
+class Dailtaskmodel extends Dailytask with HiveObjectMixin,EquatableMixin {
   @HiveField(0)
-   String title;
+  String title;
   @HiveField(1)
-   String description;
+  String description;
   @HiveField(2)
-   DateTime startDate;
+  DateTime startDate;
   @HiveField(3)
-   DateTime endDate;
+  DateTime endDate;
 
   Dailtaskmodel(
       {required this.title,
       required this.description,
       required this.startDate,
-      required this.endDate}) : super(title:title, description:description, startDate: startDate, endDate: endDate);
+      required this.endDate})
+      : super(
+            title: title,
+            description: description,
+            startDate: startDate,
+            endDate: endDate);
 
   factory Dailtaskmodel.fromEntity(Dailytask dailytask) {
     return Dailtaskmodel(
@@ -31,9 +37,18 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin {
     return Dailtaskmodel(
         title: json['title'],
         description: json['description'],
-        startDate: json['startDate'],
-        endDate: json['endDate']);
+        startDate: json['startDate'].toDate(),
+        endDate: json['endDate'].toDate());
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "description": description,
+      "startDate": startDate,
+      "endDate": endDate
+    };
+  }
+
   Dailytask toEntity() {
     return Dailytask(
         title: title,
@@ -41,4 +56,8 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin {
         startDate: startDate,
         endDate: endDate);
   }
+  
+  @override
+  // TODO: implement props
+  List<Object?> get props => [title, description, startDate, endDate];
 }
