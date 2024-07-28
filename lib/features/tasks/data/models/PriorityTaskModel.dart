@@ -53,6 +53,17 @@ class Prioritytaskmodel extends Prioritytask
         icon: Icon(Icons.ac_unit),
         id: json['id']);
   }
+  factory Prioritytaskmodel.fromEntity(Prioritytask task) {
+    return Prioritytaskmodel(
+        icon: task.icon,
+        title: task.title,
+        description: task.description,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        miniTasks: task.miniTasksList.map(
+            (key, value) => MapEntry(key, Minitaskmodel.fromEntity(value))),
+        id: task.id);
+  }
   Map<String, dynamic> toJson() {
     return {
       "title": title,
@@ -63,6 +74,17 @@ class Prioritytaskmodel extends Prioritytask
       "icon": "",
       "id": id,
     };
+  }
+
+  Prioritytask toEntity() {
+    return Prioritytask(
+        icon: icon,
+        miniTasksList: miniTasksList,
+        title: title,
+        description: description,
+        startDate: startDate,
+        endDate: endDate,
+        id: id);
   }
 
   @override
