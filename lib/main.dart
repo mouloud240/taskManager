@@ -19,11 +19,17 @@ import 'package:task_manager/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  final userBox = await Hive.openBox("User");
+
+  print('Registering adapters...');
+
   Hive.registerAdapter(UserModelAdapter());
-  Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(MinitaskmodelAdapter());
+  Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(DailtaskmodelAdapter());
+  print('Adapters registered successfully.');
+  final userBox = await Hive.openBox("User");
+  final tasksBox = await Hive.openBox("Tasks");
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }

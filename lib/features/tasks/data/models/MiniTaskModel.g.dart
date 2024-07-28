@@ -19,18 +19,20 @@ class MinitaskmodelAdapter extends TypeAdapter<Minitaskmodel> {
     return Minitaskmodel(
       name: fields[0] as String,
       status: fields[1] as bool,
-      id:fields[2] as int
+      id: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Minitaskmodel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(2)
+      ..write(obj.id);
   }
 
   @override

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
 part 'MiniTaskModel.g.dart';
-
 @HiveType(typeId: 2)
 class Minitaskmodel extends Minitask with HiveObjectMixin, EquatableMixin {
   @HiveField(0)
@@ -10,7 +9,7 @@ class Minitaskmodel extends Minitask with HiveObjectMixin, EquatableMixin {
   @HiveField(1)
   bool status;
   @HiveField(2)
-  int id;
+  String id;
   Minitaskmodel({required this.name, this.status = false, required this.id})
       : super(name: name, status: status, id: id);
   factory Minitaskmodel.fromEntity(Minitask minitask) {

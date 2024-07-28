@@ -20,11 +20,11 @@ class Prioritytaskmodel extends Prioritytask
   @HiveField(3)
   DateTime endDate;
   @HiveField(4)
-  List<Minitaskmodel> miniTasks;
+  Map<String, Minitaskmodel> miniTasks;
   @HiveField(5)
   Icon icon;
   @HiveField(6)
-  int id;
+  String id;
   Prioritytaskmodel(
       {required this.icon,
       required this.title,
@@ -47,10 +47,9 @@ class Prioritytaskmodel extends Prioritytask
         description: json['description'],
         startDate: dateFormat.parse(json['startDate'].replaceAll(" UTC+1", "")),
         endDate: dateFormat.parse(json["endDate"].replaceAll(" UTC+1", "")),
-        miniTasks: [
-          for (var elemnt in json['miniTasksList'])
-            Minitaskmodel.fromJson(elemnt)
-        ],
+        miniTasks: (json['minitasks'] as Map<String, dynamic>).map(
+            (key, value) => MapEntry(
+                key, Minitaskmodel.fromJson(value as Map<String, dynamic>))),
         icon: Icon(Icons.ac_unit),
         id: json['id']);
   }
@@ -60,7 +59,7 @@ class Prioritytaskmodel extends Prioritytask
       "description": description,
       "startDate": "${dateFormat.format(startDate)} UTC+1",
       "endDate": "${dateFormat.format(endDate)} UTC+1",
-      "miniTasksList": [for (var elemnt in miniTasks) elemnt.toJson()],
+      "minitasks": miniTasks.map((key, value) => MapEntry(key, value.toJson())),
       "icon": "",
       "id": id,
     };

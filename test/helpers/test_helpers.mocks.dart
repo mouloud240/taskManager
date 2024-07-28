@@ -181,13 +181,13 @@ class MockTaskmanagementrepository extends _i1.Mock
       ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, void>> edittaskInPriorityTask(
+  _i4.Future<_i2.Either<_i5.Failure, void>> editTaskInPriorityTask(
     _i7.Prioritytask? priorityTask,
     _i8.Minitask? editedTask,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
-          #edittaskInPriorityTask,
+          #editTaskInPriorityTask,
           [
             priorityTask,
             editedTask,
@@ -197,7 +197,7 @@ class MockTaskmanagementrepository extends _i1.Mock
             _FakeEither_0<_i5.Failure, void>(
           this,
           Invocation.method(
-            #edittaskInPriorityTask,
+            #editTaskInPriorityTask,
             [
               priorityTask,
               editedTask,

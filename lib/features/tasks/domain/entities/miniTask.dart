@@ -1,6 +1,6 @@
 class Minitask {
   String name;
   bool status;
-  int id;
+  String id;
   Minitask({required this.name, this.status = false,required this.id});
 }

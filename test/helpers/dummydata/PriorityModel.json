@@ -1,25 +1,20 @@
 {
-    
-      
-        "miniTasksList": [
-          {
-            "name": "making first Test",
-            "status": true,
-            "id":0
-          },
-          {
-            "name": "making second Test",
-            "status": false,
-          "id":1
-           }
-        ],
-            "startDate": "July 27, 2024 at 1:06:24 AM UTC+1",
-            "description": "Trying to test the model",
-            "endDate": "July 28, 2024 at 1:06:51 AM UTC+1",
-            "title": "Testing function",
-            "id":0,
-            "icon":""
+  "id": "0",
+  "icon": "", 
+  "minitasks": {
+    "0": {
+      "name": "making first Test",
+      "status": true,
+      "id": "0"
+    },
+    "1": {
+      "name": "making second Test",
+      "status": false,
+      "id": "1"
+    }
+  },
+  "title": "Testing function",
+  "description": "Trying to test the model",
+  "startDate": "July 27, 2024 at 1:06:24 AM UTC+1",
+  "endDate": "July 28, 2024 at 1:06:51 AM UTC+1"
 }
-    
-
-  

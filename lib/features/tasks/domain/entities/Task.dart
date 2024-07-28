@@ -4,7 +4,7 @@ class Task {
   String description;
   DateTime startDate;
   DateTime endDate;
-  int id;
+  String id;
   Task({
     required this.title,
     required this.description,

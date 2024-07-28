@@ -8,8 +8,8 @@ class LocalUser {
     await userBox.put('current_user', user);
   }
 
-  Future<UserModel> getCurrentUser() async {
-    return userBox.get('current_user');
+  Future<UserModel> getCurrentUser() async  {
+    return await userBox.get('current_user');
   }
 
   Future<void> removeCurrentUser() async {

@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_manager/core/connection/network_info.dart';
 import 'package:task_manager/features/auth/data/source/local/local_user.dart';
-import 'package:task_manager/features/auth/domain/entities/user.dart'as TaskManagerUser;
+import 'package:task_manager/features/auth/domain/entities/user.dart'
+    as TaskManagerUser;
 part 'userState.g.dart';
 
 @riverpod
@@ -34,7 +35,7 @@ class userState extends _$userState {
       }
     } else {
       final user = await local.getCurrentUser();
-      return user.toEntity();
+      return user!.toEntity();
     }
   }
 }
