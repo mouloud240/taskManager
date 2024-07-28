@@ -45,7 +45,8 @@ class MyApp extends StatelessWidget {
     final connectionInfo = NetworkInfoImpl(DataConnectionChecker());
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: "Sofia Pro"),
+        theme:
+            ThemeData(fontFamily: "Sofia Pro", splashColor: Colors.transparent),
         routes: {
           "login": (context) => const LoginPage(),
           'home': (context) => const Homepage(),

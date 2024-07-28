@@ -11,22 +11,28 @@ DateFormat dateFormat = DateFormat("MMMM d, y 'at' h:mm:ss a");
 @HiveType(typeId: 3)
 class Prioritytaskmodel extends Prioritytask
     with HiveObjectMixin, EquatableMixin {
+  @override
   @HiveField(0)
   String title;
+  @override
   @HiveField(1)
   String description;
+  @override
   @HiveField(2)
   DateTime startDate;
+  @override
   @HiveField(3)
   DateTime endDate;
   @HiveField(4)
   Map<String, Minitaskmodel> miniTasks;
+  @override
   @HiveField(5)
-  Icon icon;
+  Widget? icon;
+  @override
   @HiveField(6)
   String id;
   Prioritytaskmodel(
-      {required this.icon,
+      {this.icon,
       required this.title,
       required this.description,
       required this.startDate,
@@ -50,7 +56,7 @@ class Prioritytaskmodel extends Prioritytask
         miniTasks: (json['minitasks'] as Map<String, dynamic>).map(
             (key, value) => MapEntry(
                 key, Minitaskmodel.fromJson(value as Map<String, dynamic>))),
-        icon: Icon(Icons.ac_unit),
+        icon: const Icon(Icons.ac_unit),
         id: json['id']);
   }
   factory Prioritytaskmodel.fromEntity(Prioritytask task) {
@@ -64,6 +70,7 @@ class Prioritytaskmodel extends Prioritytask
             (key, value) => MapEntry(key, Minitaskmodel.fromEntity(value))),
         id: task.id);
   }
+  @override
   Map<String, dynamic> toJson() {
     return {
       "title": title,
@@ -71,7 +78,7 @@ class Prioritytaskmodel extends Prioritytask
       "startDate": "${dateFormat.format(startDate)} UTC+1",
       "endDate": "${dateFormat.format(endDate)} UTC+1",
       "minitasks": miniTasks.map((key, value) => MapEntry(key, value.toJson())),
-      "icon": "",
+      "icon": icon,
       "id": id,
     };
   }

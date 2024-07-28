@@ -17,7 +17,7 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Prioritytaskmodel(
-      icon: fields[5] as Icon,
+      icon: fields[5] as Widget?,
       title: fields[0] as String,
       description: fields[1] as String,
       startDate: fields[2] as DateTime,

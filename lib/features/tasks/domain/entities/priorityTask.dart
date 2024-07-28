@@ -4,10 +4,10 @@ import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
 
 class Prioritytask extends Task {
   Map<String,Minitask> miniTasksList;
-  Icon icon;
+  Widget? icon;
  
   Prioritytask(
-      {required this.icon,
+      { this.icon,
       required this.miniTasksList,
       required super.title,
       required super.description,

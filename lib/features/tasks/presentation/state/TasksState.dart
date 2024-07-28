@@ -17,23 +17,23 @@ final local = LocalDataSource();
 
 @riverpod
 class priorityTasksState extends _$priorityTasksState {
-@override
-  Future<Either<Failure,List<Prioritytask>>> build(WidgetRef remoteref)async {
+  @override
+  Future<Either<Failure, List<Prioritytask>>> build(WidgetRef remoteref) async {
     final remote = RemoteDataSource(remoteref);
-    final task_Repo_implentation = TaskmanagementRepositoryImplementation(
+    final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
 
-    return Getprioritytasksusecase(task_Repo_implentation).call();
-    
+    return Getprioritytasksusecase(taskRepoImplentation).call();
   }
 }
 
 @riverpod
 class dailyTasksState extends _$dailyTasksState {
- Future<Either<Failure, List<Dailytask>>> build(WidgetRef remoteRef)async {
-   final remote = RemoteDataSource(remoteRef);
-    final task_Repo_implentation = TaskmanagementRepositoryImplementation(
+  @override
+  Future<Either<Failure, List<Dailytask>>> build(WidgetRef remoteRef) async {
+    final remote = RemoteDataSource(remoteRef);
+    final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
-    return Getdailytasksusecase(task_Repo_implentation).call() ;
+    return Getdailytasksusecase(taskRepoImplentation).call();
   }
 }
