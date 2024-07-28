@@ -22,7 +22,7 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       description: fields[1] as String,
       startDate: fields[2] as DateTime,
       endDate: fields[3] as DateTime,
-      miniTasks: (fields[4] as Map).cast<String,Minitaskmodel>(),
+      miniTasks: (fields[4] as Map).cast<String, Minitaskmodel>(),
       id: fields[6] as String,
     );
   }
