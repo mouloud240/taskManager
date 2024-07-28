@@ -35,7 +35,7 @@ class userState extends _$userState {
       }
     } else {
       final user = await local.getCurrentUser();
-      return user!.toEntity();
+      return user.toEntity();
     }
   }
 }

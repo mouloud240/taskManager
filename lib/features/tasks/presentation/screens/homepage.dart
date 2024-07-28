@@ -27,7 +27,7 @@ class Homepage extends ConsumerStatefulWidget {
 class _HomepageState extends ConsumerState<Homepage> {
   final testPrioTask2 = Prioritytaskmodel(
       id: "1",
-      icon: Icon(Icons.ac_unit),
+      icon: const Icon(Icons.ac_unit),
       miniTasks: {
         "0": Minitaskmodel(name: "making first Test", status: true, id: "0"),
         "1": Minitaskmodel(name: "making second Test", status: false, id: "1"),
@@ -38,7 +38,7 @@ class _HomepageState extends ConsumerState<Homepage> {
       endDate: dateFormat.parse("July 28, 2024 at 1:06:51 AM"));
   final testPrioTask3 = Prioritytaskmodel(
       id: "0",
-      icon: Icon(Icons.ac_unit),
+      icon: const Icon(Icons.ac_unit),
       miniTasks: {
         "0": Minitaskmodel(name: "making first Test", status: true, id: "0"),
         "1": Minitaskmodel(name: "making second Test", status: false, id: "1"),
@@ -59,7 +59,7 @@ class _HomepageState extends ConsumerState<Homepage> {
     return Scaffold(
         body: RefreshIndicator(
             onRefresh: () async {
-              await ref.refresh(userStateProvider);
+              ref.refresh(userStateProvider);
             },
             child: ListView(
               children: [
@@ -72,11 +72,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                           setState(() {
                             user = data;
                           });
-                          ;
                           return Text("${data!.username}");
                         },
                         error: (error, stackTrace) => Text(error.toString()),
-                        loading: () => CircularProgressIndicator(),
+                        loading: () => const CircularProgressIndicator(),
                       ),
                       ElevatedButton(
                           onPressed: () {
@@ -86,7 +85,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
                             Navigator.of(context).pushNamed('login');
                           },
-                          child: Text("Logout")),
+                          child: const Text("Logout")),
                       ElevatedButton(
                           onPressed: () async {
                             Either<Failure, void> result =
@@ -100,10 +99,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                                     .showSnackBar(
                                         SnackBar(content: Text(l.errMessage))),
                                 (r) => ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                    .showSnackBar(const SnackBar(
                                         content: Text("Task Deleted"))));
                           },
-                          child: Text("ClickMe"))
+                          child: const Text("ClickMe"))
                     ],
                   ),
                 ),

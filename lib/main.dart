@@ -13,6 +13,7 @@ import 'package:task_manager/features/auth/presentation/screens/authpages/loginp
 import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
+import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
 import 'package:task_manager/firebase_options.dart';
 
@@ -28,7 +29,8 @@ void main() async {
   Hive.registerAdapter(DailtaskmodelAdapter());
   print('Adapters registered successfully.');
   final userBox = await Hive.openBox("User");
-  final tasksBox = await Hive.openBox("Tasks");
+  final priotasksBox = await Hive.openBox("PrioTasks");
+  final dailytasksbox = await Hive.openBox<Dailytask>("DailyTasks");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
