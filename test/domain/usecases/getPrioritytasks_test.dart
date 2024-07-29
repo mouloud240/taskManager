@@ -31,6 +31,7 @@ void main() {
       description: "I want the test to fail",
       startDate: DateTime.utc(2024, 7, 26, 23, 12, 28),
       endDate: DateTime.utc(2024, 7, 27, 23, 12, 43),
+      status: false,
     ),
   ];
 

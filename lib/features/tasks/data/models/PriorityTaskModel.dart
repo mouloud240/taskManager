@@ -31,22 +31,28 @@ class Prioritytaskmodel extends Prioritytask
   @override
   @HiveField(6)
   String id;
-  Prioritytaskmodel(
-      {this.icon,
-      required this.title,
-      required this.description,
-      required this.startDate,
-      required this.endDate,
-      required this.miniTasks,
-      required this.id})
-      : super(
-            icon: icon,
-            miniTasksList: miniTasks,
-            title: title,
-            description: description,
-            startDate: startDate,
-            endDate: endDate,
-            id: id);
+  @override
+  @HiveField(7)
+  bool status;
+  Prioritytaskmodel({
+    this.icon,
+    required this.title,
+    required this.description,
+    required this.startDate,
+    required this.endDate,
+    required this.miniTasks,
+    required this.id,
+    this.status = false,
+  }) : super(
+          icon: icon,
+          miniTasksList: miniTasks,
+          title: title,
+          description: description,
+          startDate: startDate,
+          endDate: endDate,
+          id: id,
+          status: status,
+        );
   factory Prioritytaskmodel.fromJson(Map<String, dynamic> json) {
     return Prioritytaskmodel(
         title: json['title'],
@@ -57,7 +63,8 @@ class Prioritytaskmodel extends Prioritytask
             (key, value) => MapEntry(
                 key, Minitaskmodel.fromJson(value as Map<String, dynamic>))),
         icon: const Icon(Icons.ac_unit),
-        id: json['id']);
+        id: json['id'],
+        status: json['status']);
   }
   factory Prioritytaskmodel.fromEntity(Prioritytask task) {
     return Prioritytaskmodel(
@@ -68,7 +75,8 @@ class Prioritytaskmodel extends Prioritytask
         endDate: task.endDate,
         miniTasks: task.miniTasksList.map(
             (key, value) => MapEntry(key, Minitaskmodel.fromEntity(value))),
-        id: task.id);
+        id: task.id,
+        status: task.status);
   }
   @override
   Map<String, dynamic> toJson() {
@@ -80,6 +88,7 @@ class Prioritytaskmodel extends Prioritytask
       "minitasks": miniTasks.map((key, value) => MapEntry(key, value.toJson())),
       "icon": icon,
       "id": id,
+      "status": status
     };
   }
 
@@ -91,10 +100,11 @@ class Prioritytaskmodel extends Prioritytask
         description: description,
         startDate: startDate,
         endDate: endDate,
-        id: id);
+        id: id,
+        status: status);
   }
 
   @override
   List<Object?> get props =>
-      [title, description, startDate, endDate, miniTasks, id];
+      [title, description, startDate, endDate, miniTasks, id, status];
 }

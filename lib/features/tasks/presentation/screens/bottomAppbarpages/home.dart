@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
+import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
+import 'package:task_manager/features/tasks/presentation/widgets/Daily_taskTile.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -14,6 +16,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final UserValue = ref.watch(userStateProvider);
+    final dailyValue = ref.watch(dailyTasksStateProvider(ref));
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -54,6 +57,29 @@ class _HomeState extends ConsumerState<Home> {
             "My Daily Tasks",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.02,
+          ),
+          dailyValue.when(
+              data: (data) {
+                return data.fold((fai) {
+                  return Text(fai.errMessage);
+                }, (tasks) {
+                  return ListView.separated(
+                      separatorBuilder: (context, index) => SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                      shrinkWrap: true,
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        return DailyTasktile(
+                          dailyTask: tasks[index],
+                        );
+                      });
+                });
+              },
+              error: (error, stackTrace) => const Text("Error"),
+              loading: () => const CircularProgressIndicator())
         ],
       ),
     );

@@ -13,7 +13,8 @@ class Prioritytask extends Task {
       required super.description,
       required super.startDate,
       required super.endDate,
-      required super.id
+      required super.id,
+      required super.status
       
       });
 

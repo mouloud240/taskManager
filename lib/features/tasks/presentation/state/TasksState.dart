@@ -34,6 +34,8 @@ class dailyTasksState extends _$dailyTasksState {
     final remote = RemoteDataSource(remoteRef);
     final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
+
+    
     return Getdailytasksusecase(taskRepoImplentation).call();
   }
 }

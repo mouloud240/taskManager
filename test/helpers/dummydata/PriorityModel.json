@@ -1,6 +1,6 @@
 {
   "id": "0",
-  "icon": "", 
+  "icon": "IconData(U+0E037)", 
   "minitasks": {
     "0": {
       "name": "making first Test",
@@ -16,5 +16,7 @@
   "title": "Testing function",
   "description": "Trying to test the model",
   "startDate": "July 27, 2024 at 1:06:24 AM UTC+1",
-  "endDate": "July 28, 2024 at 1:06:51 AM UTC+1"
+  "endDate": "July 28, 2024 at 1:06:51 AM UTC+1",
+  "status": false
+  
 }
