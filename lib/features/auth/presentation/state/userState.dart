@@ -27,7 +27,6 @@ class userState extends _$userState {
             email: doc.data()!["email"],
             username: doc.data()!["username"],
             uid: FirebaseAuth.instance.currentUser!.uid);
-
         return user;
       } else {
         return TaskManagerUser.User(

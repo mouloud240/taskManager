@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +24,7 @@ class priorityTasksState extends _$priorityTasksState {
     final remote = RemoteDataSource(remoteref);
     final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
-
+    debugPrint(Getprioritytasksusecase(taskRepoImplentation).call().toString());
     return Getprioritytasksusecase(taskRepoImplentation).call();
   }
 }
@@ -34,8 +36,7 @@ class dailyTasksState extends _$dailyTasksState {
     final remote = RemoteDataSource(remoteRef);
     final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
-
-    
-    return Getdailytasksusecase(taskRepoImplentation).call();
+    final tasks = await Getdailytasksusecase(taskRepoImplentation).call();
+    return tasks;
   }
 }

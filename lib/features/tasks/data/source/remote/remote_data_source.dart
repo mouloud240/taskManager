@@ -18,47 +18,33 @@ class RemoteDataSource {
   Future<Either<Failure, Map<String, dynamic>>>
       getPriorityTasks_remote() async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return await currUser.when(
-        data: (data) async {
-          final DocumentSnapshot doc =
-              await db.collection("users").doc(data!.uid).get();
-
-          final Map<String, dynamic> tasks =
-              doc.get("priorityTasks") as Map<String, dynamic>;
-          return Right(tasks);
-        },
-        error: (error, stackTrace) {
-          return Left(Failure(errMessage: error.toString()));
-        },
-        loading: () {
-          return Left(Failure(errMessage: "Loading"));
-        },
-      );
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      final DocumentSnapshot doc =
+          await db.collection("users").doc(currUser.uid).get();
+      final Map<String, dynamic> tasks =
+          doc.get("priorityTasks") as Map<String, dynamic>;
+      return Right(tasks);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
   }
 
   Future<Either<Failure, Map<String, dynamic>>> getDailyTasks_remote() async {
+    final currUser = await ref.watch(userStateProvider.future);
+    if (currUser == null) {
+      return Left(Failure(errMessage: "User not found"));
+    }
     try {
-      final currUser = ref.watch(userStateProvider);
-      return await currUser.when(
-        data: (data) async {
-          final DocumentSnapshot doc =
-              await db.collection("users").doc(data!.uid).get();
-          final Map<String, dynamic> tasks =
-              doc.get("dailyTasks") as Map<String, dynamic>;
+      final db = FirebaseFirestore.instance;
+      final DocumentSnapshot doc =
+          await db.collection("users").doc(currUser.uid).get();
+      final Map<String, dynamic> tasks =
+          doc.get("dailyTasks") as Map<String, dynamic>;
 
-          return Right(tasks);
-        },
-        error: (error, stackTrace) {
-          return Left(Failure(errMessage: error.toString()));
-        },
-        loading: () {
-          return Left(Failure(errMessage: "Loading"));
-        },
-      );
+      return Right(tasks);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -67,23 +53,15 @@ class RemoteDataSource {
   Future<Either<Failure, void>> createNewDailyTask_remote(
       Dailtaskmodel dailyTask) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return await currUser.when(
-        data: (data) async {
-          await db
-              .collection("users")
-              .doc(data!.uid)
-              .update({"dailyTasks.${dailyTask.id}": dailyTask.toJson()});
-          // ignore: void_checks
-          return const Right(Unit);
-        },
-        error: (error, stackTrace) {
-          return Left(Failure(errMessage: error.toString()));
-        },
-        loading: () {
-          return Left(Failure(errMessage: "Loading"));
-        },
-      );
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      await db
+          .collection("users")
+          .doc(currUser.uid)
+          .update({"dailyTasks.${dailyTask.id}": dailyTask.toJson()});
+      return const Right(Unit);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -92,21 +70,15 @@ class RemoteDataSource {
   Future<Either<Failure, void>> createNewPriorityTask_remote(
       Prioritytaskmodel priorityTask) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return currUser.when(
-        data: (data) async {
-          await db.collection('users').doc(data!.uid).update(
-              {"priorityTasks.${priorityTask.id}": priorityTask.toJson()});
-
-          // ignore: void_checks
-          return const Right(unit);
-        },
-        error: (error, stackTrace) =>
-            Left(Failure(errMessage: error.toString())),
-        loading: () {
-          return Left(Failure(errMessage: "Loading"));
-        },
-      );
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      await db
+          .collection("users")
+          .doc(currUser.uid)
+          .update({"priorityTasks.${priorityTask.id}": priorityTask.toJson()});
+      return const Right(Unit);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -115,27 +87,21 @@ class RemoteDataSource {
   Future<Either<Failure, void>> addNewtaskInPriorityTask_remote(
       Prioritytaskmodel priorityTask, Minitaskmodel newTask) async {
     try {
-      final currUser = ref.watch(userStateProvider);
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
       Either<Failure, Map<String, dynamic>> priorityTasks =
           await getPriorityTasks_remote();
-      return currUser.when(data: (data) async {
-        return priorityTasks.fold((failure) {
-          return left(failure);
-        }, (tasks) {
-          tasks[priorityTask.id]['minitasks'][newTask.id] = newTask.toJson();
-          db
-              .collection('users')
-              .doc(data!.uid)
-              .update({"priorityTasks": tasks});
-
-          // ignore: void_checks
-          return const Right(unit);
-        });
-      }, error: (err, stk) {
-        return Future<Either<Failure, void>>.value(
-            Left(Failure(errMessage: err.toString())));
-      }, loading: () {
-        return Left(Failure(errMessage: "Loading"));
+      return priorityTasks.fold((failure) {
+        return Left(failure);
+      }, (tasks) {
+        tasks[priorityTask.id]['minitasks'][newTask.id] = newTask.toJson();
+        db
+            .collection('users')
+            .doc(currUser.uid)
+            .update({"priorityTasks": tasks});
+        return const Right(Unit);
       });
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
@@ -145,29 +111,22 @@ class RemoteDataSource {
   Future<Either<Failure, void>> editTaskInPriorityTask_remote(
       Prioritytaskmodel priorityTask, Minitaskmodel editedTask) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return currUser.when(data: (data) async {
-        Either<Failure, Map<String, dynamic>> priorityTasks =
-            await getPriorityTasks_remote();
-        return priorityTasks.fold((failure) {
-          return left(failure);
-        }, (tasks) {
-          tasks[priorityTask.id]['minitasks'][editedTask.id] =
-              editedTask.toJson();
-
-          db
-              .collection("users")
-              .doc(data!.uid)
-              .update({"priorityTasks": tasks});
-
-          // ignore: void_checks
-          return const Right(unit);
-        });
-      }, error: (err, stk) {
-        return Future<Either<Failure, void>>.value(
-            Left(Failure(errMessage: err.toString())));
-      }, loading: () {
-        return Left(Failure(errMessage: "Loading"));
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      Either<Failure, Map<String, dynamic>> priorityTasks =
+          await getPriorityTasks_remote();
+      return priorityTasks.fold((failure) {
+        return Left(failure);
+      }, (tasks) {
+        tasks[priorityTask.id]['minitasks'][editedTask.id] =
+            editedTask.toJson();
+        db
+            .collection("users")
+            .doc(currUser.uid)
+            .update({"priorityTasks": tasks});
+        return const Right(Unit);
       });
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
@@ -176,25 +135,17 @@ class RemoteDataSource {
 
   Future<Either<Failure, void>> deleteDailyTask(String id) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return await currUser.when(
-          data: (user) async {
-            // ignore: no_leading_underscores_for_local_identifiers
-            Either<Failure, Map<String, dynamic>> _dailyTasks =
-                await getDailyTasks_remote();
-            _dailyTasks.fold((failure) => Left(failure), (dailyTasks) {
-              dailyTasks.remove(id);
-              db
-                  .collection("users")
-                  .doc(user!.uid)
-                  .update({"dailyTasks": dailyTasks});
-            });
-            // ignore: void_checks
-            return const Right(unit);
-          },
-          error: (error, stackTrace) =>
-              Left(Failure(errMessage: error.toString())),
-          loading: () => Left(Failure(errMessage: "Loading")));
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      Either<Failure, Map<String, dynamic>> dailyTasks =
+          await getDailyTasks_remote();
+      return dailyTasks.fold((failure) => Left(failure), (tasks) {
+        tasks.remove(id);
+        db.collection("users").doc(currUser.uid).update({"dailyTasks": tasks});
+        return const Right(Unit);
+      });
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -202,24 +153,20 @@ class RemoteDataSource {
 
   Future<Either<Failure, void>> deletePriorityTask(String id) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return currUser.when(
-          data: (user) async {
-            Either<Failure, Map<String, dynamic>> priorityTasks =
-                await getPriorityTasks_remote();
-            priorityTasks.fold((failure) => Left(failure), (priorityTasks) {
-              priorityTasks.remove(id);
-              db
-                  .collection("users")
-                  .doc(user!.uid)
-                  .update({"priorityTasks": priorityTasks});
-            });
-            // ignore: void_checks
-            return const Right(unit);
-          },
-          error: (error, stackTrace) =>
-              Left(Failure(errMessage: error.toString())),
-          loading: () => Left(Failure(errMessage: "Loading")));
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      Either<Failure, Map<String, dynamic>> priorityTasks =
+          await getPriorityTasks_remote();
+      return priorityTasks.fold((failure) => Left(failure), (tasks) {
+        tasks.remove(id);
+        db
+            .collection("users")
+            .doc(currUser.uid)
+            .update({"priorityTasks": tasks});
+        return const Right(Unit);
+      });
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -228,24 +175,38 @@ class RemoteDataSource {
   Future<Either<Failure, void>> deleteTaskfromPriorityTask(
       Prioritytaskmodel priorityTask, String id) async {
     try {
-      final currUser = ref.watch(userStateProvider);
-      return currUser.when(
-          data: (user) async {
-            Either<Failure, Map<String, dynamic>> priorityTasks =
-                await getPriorityTasks_remote();
-            priorityTasks.fold((failure) => Left(failure), (priorityTasks) {
-              priorityTasks[priorityTask.id]['minitasks'].remove(id);
-              db
-                  .collection("users")
-                  .doc(user!.uid)
-                  .update({"priorityTasks": priorityTasks});
-            });
-            // ignore: void_checks
-            return const Right(unit);
-          },
-          error: (error, stackTrace) =>
-              Left(Failure(errMessage: error.toString())),
-          loading: () => Left(Failure(errMessage: "Loading")));
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      Either<Failure, Map<String, dynamic>> priorityTasks =
+          await getPriorityTasks_remote();
+      return priorityTasks.fold((failure) => Left(failure), (tasks) {
+        tasks[priorityTask.id]['minitasks'].remove(id);
+        db
+            .collection("users")
+            .doc(currUser.uid)
+            .update({"priorityTasks": tasks});
+        return const Right(Unit);
+      });
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> updateDailyTasks(
+      List<Dailtaskmodel> list) async {
+    try {
+      final currUser = await ref.read(userStateProvider.future);
+      if (currUser == null) {
+        return Left(Failure(errMessage: "User not found"));
+      }
+      Map<String, dynamic> tasks = {};
+      for (var element in list) {
+        tasks[element.id] = element.toJson();
+      }
+      db.collection("users").doc(currUser.uid).update({"dailyTasks": tasks});
+      return const Right(Unit);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }

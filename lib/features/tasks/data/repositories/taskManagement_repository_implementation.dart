@@ -120,17 +120,18 @@ class TaskmanagementRepositoryImplementation
   @override
   Future<Either<Failure, List<Dailytask>>> getDailyTasks() async {
     if (await networkInfo.isConnected) {
-      List<Dailytask> task = [];
       Either<Failure, Map<String, dynamic>> res =
           await remoteDataSource.getDailyTasks_remote();
-      res.fold((fail) {
+      final Either<Failure, List<Dailytask>> test = res.fold((fail) {
         return left(fail);
       }, (dailys) {
+        List<Dailytask> tasks = [];
         dailys.forEach((key, value) {
-          task.add(Dailtaskmodel.fromJson(value).toEntity());
+          tasks.add(Dailtaskmodel.fromJson(value).toEntity());
         });
+        return right(tasks);
       });
-      return Right(task);
+      return test;
     } else {
       return localDataSource.getDailyTasks();
     }

@@ -21,13 +21,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  print('Registering adapters...');
-
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(MinitaskmodelAdapter());
   Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(DailtaskmodelAdapter());
-  print('Adapters registered successfully.');
+
   final userBox = await Hive.openBox("User");
   final priotasksBox = await Hive.openBox("PrioTasks");
   final dailytasksbox = await Hive.openBox<Dailytask>("DailyTasks");

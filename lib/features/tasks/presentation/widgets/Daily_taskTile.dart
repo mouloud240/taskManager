@@ -18,18 +18,50 @@ class DailyTasktile extends ConsumerStatefulWidget {
 }
 
 class _DailyTasktileState extends ConsumerState<DailyTasktile> {
+  late bool status;
+
+  @override
+  void initState() {
+    super.initState();
+    status = widget.dailyTask.status;
+  }
+
   @override
   Widget build(BuildContext context) {
     final taskManage = TaskmanagementRepositoryImplementation(
         remoteDataSource: RemoteDataSource(ref),
         localDataSource: LocalDataSource());
+
     return GestureDetector(
-      onTap: () {
-        // ignore: invalid_use_of_protected_member
+      onTap: () async {
         setState(() {
-          widget.dailyTask.status = !widget.dailyTask.status;
+          status = !status; // Update the local status
         });
-        Createnewdailyusecase(taskManage).call(widget.dailyTask);
+
+        // Log before updating Firebase
+        print("Updating task status in Firebase");
+        // Update the task status in Firebase
+        final result = await Createnewdailyusecase(taskManage).call(Dailytask(
+          title: widget.dailyTask.title,
+          description: widget.dailyTask.description,
+          startDate: widget.dailyTask.startDate,
+          endDate: widget.dailyTask.endDate,
+          id: widget.dailyTask.id,
+          status: status,
+        ));
+
+        // Log result
+        result.fold(
+          (failure) {
+            print("Error updating task: ${failure.errMessage}");
+            setState(() {
+              status = !status; // Revert status change on error
+            });
+          },
+          (_) => print("Task updated successfully"),
+        );
+
+        // Refresh the state
         ref.refresh(DailyTasksStateProvider(ref));
       },
       child: Container(
@@ -48,13 +80,11 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
               Text(
                 widget.dailyTask.description,
                 style: TextStyle(
-                    color: widget.dailyTask.status
-                        ? Appcolors.brandColor
-                        : Colors.black,
+                    color: status ? Appcolors.brandColor : Colors.black,
                     fontWeight: FontWeight.w500,
                     fontSize: 20),
               ),
-              SvgPicture.asset(widget.dailyTask.status
+              SvgPicture.asset(status
                   ? "lib/core/assets/icons/checked.svg"
                   : "lib/core/assets/icons/unchecked.svg")
             ],

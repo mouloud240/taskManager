@@ -15,15 +15,16 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
-    final UserValue = ref.watch(userStateProvider);
+    final userValue = ref.watch(userStateProvider);
     final dailyValue = ref.watch(dailyTasksStateProvider(ref));
+    final priorityValue = ref.watch(priorityTasksStateProvider(ref));
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UserValue.when(
+          userValue.when(
               data: (data) {
                 String getFirstWord(String? input) {
                   List<String> words = input!.split(' ');
@@ -32,7 +33,7 @@ class _HomeState extends ConsumerState<Home> {
 
                 String name = getFirstWord(data!.username);
                 return Text(
-                  "Welocme $name",
+                  "Welcome $name",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Appcolors.headerColor,
@@ -53,8 +54,20 @@ class _HomeState extends ConsumerState<Home> {
             "My Priority Tasks",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
+          priorityValue.when(
+            data: (res) {
+              return res.fold((fail) => Text(fail.errMessage), (tasks) {
+                if (tasks.isEmpty) {
+                  return const Text("Diam");
+                }
+                return Text(tasks[0].title);
+              });
+            },
+            error: (error, stackTrace) => Text(error.toString()),
+            loading: () => const CircularProgressIndicator(),
+          ),
           const Text(
-            "My Daily Tasks",
+            "Daily Tasks",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           SizedBox(

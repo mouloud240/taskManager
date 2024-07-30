@@ -50,7 +50,8 @@ class Dailtaskmodel extends Dailytask with HiveObjectMixin, EquatableMixin {
         description: dailytask.description,
         startDate: dailytask.startDate,
         endDate: dailytask.endDate,
-        id: dailytask.id);
+        id: dailytask.id,
+        status: dailytask.status);
   }
   factory Dailtaskmodel.fromJson(Map<String, dynamic> json) {
     return Dailtaskmodel(
