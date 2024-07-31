@@ -23,6 +23,8 @@ void main() {
     description: "Trying to test the model",
     startDate: dateFormat.parse("July 27, 2024 at 1:06:24 AM"),
     endDate: dateFormat.parse("July 28, 2024 at 1:06:51 AM"),
+    status: false,
+    color: Colors.red,
   );
 
   test("Should be a subclass of Priority", () async {

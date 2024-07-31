@@ -24,7 +24,6 @@ class priorityTasksState extends _$priorityTasksState {
     final remote = RemoteDataSource(remoteref);
     final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
-    debugPrint(Getprioritytasksusecase(taskRepoImplentation).call().toString());
     return Getprioritytasksusecase(taskRepoImplentation).call();
   }
 }

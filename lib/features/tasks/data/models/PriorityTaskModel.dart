@@ -6,6 +6,18 @@ import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 import 'package:intl/intl.dart';
 part 'PriorityTaskModel.g.dart';
 
+int convertToInt(Color? color) {
+  if (color != null) {
+    return color.value;
+  }
+  return 0;
+}
+
+Color convertToColor(int intColor) {
+  print(Color(intColor));
+  return Color(intColor);
+}
+
 DateFormat dateFormat = DateFormat("MMMM d, y 'at' h:mm:ss a");
 
 @HiveType(typeId: 3)
@@ -34,6 +46,9 @@ class Prioritytaskmodel extends Prioritytask
   @override
   @HiveField(7)
   bool status;
+  @override
+  @HiveField(8)
+  Color? color;
   Prioritytaskmodel({
     this.icon,
     required this.title,
@@ -42,6 +57,7 @@ class Prioritytaskmodel extends Prioritytask
     required this.endDate,
     required this.miniTasks,
     required this.id,
+    this.color,
     this.status = false,
   }) : super(
           icon: icon,
@@ -52,19 +68,21 @@ class Prioritytaskmodel extends Prioritytask
           endDate: endDate,
           id: id,
           status: status,
+          color: color,
         );
   factory Prioritytaskmodel.fromJson(Map<String, dynamic> json) {
     return Prioritytaskmodel(
-        title: json['title'],
-        description: json['description'],
-        startDate: dateFormat.parse(json['startDate'].replaceAll(" UTC+1", "")),
-        endDate: dateFormat.parse(json["endDate"].replaceAll(" UTC+1", "")),
-        miniTasks: (json['minitasks'] as Map<String, dynamic>).map(
-            (key, value) => MapEntry(
-                key, Minitaskmodel.fromJson(value as Map<String, dynamic>))),
-        icon: const Icon(Icons.ac_unit),
-        id: json['id'],
-        status: json['status']);
+      title: json['title'],
+      description: json['description'],
+      startDate: dateFormat.parse(json['startDate'].replaceAll(" UTC+1", "")),
+      endDate: dateFormat.parse(json["endDate"].replaceAll(" UTC+1", "")),
+      miniTasks: (json['minitasks'] as Map<String, dynamic>).map((key, value) =>
+          MapEntry(key, Minitaskmodel.fromJson(value as Map<String, dynamic>))),
+      icon: json['icon'],
+      id: json['id'],
+      status: json['status'],
+      color: convertToColor(json['color']),
+    );
   }
   factory Prioritytaskmodel.fromEntity(Prioritytask task) {
     return Prioritytaskmodel(
@@ -76,7 +94,8 @@ class Prioritytaskmodel extends Prioritytask
         miniTasks: task.miniTasksList.map(
             (key, value) => MapEntry(key, Minitaskmodel.fromEntity(value))),
         id: task.id,
-        status: task.status);
+        status: task.status,
+        color: task.color);
   }
   @override
   Map<String, dynamic> toJson() {
@@ -88,20 +107,23 @@ class Prioritytaskmodel extends Prioritytask
       "minitasks": miniTasks.map((key, value) => MapEntry(key, value.toJson())),
       "icon": icon,
       "id": id,
-      "status": status
+      "status": status,
+      "color": convertToInt(color),
     };
   }
 
   Prioritytask toEntity() {
     return Prioritytask(
-        icon: icon,
-        miniTasksList: miniTasksList,
-        title: title,
-        description: description,
-        startDate: startDate,
-        endDate: endDate,
-        id: id,
-        status: status);
+      icon: icon,
+      miniTasksList: miniTasksList,
+      title: title,
+      description: description,
+      startDate: startDate,
+      endDate: endDate,
+      id: id,
+      status: status,
+      color: color,
+    );
   }
 
   @override

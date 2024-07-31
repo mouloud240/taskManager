@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
+import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
+import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
@@ -29,24 +31,21 @@ class _HomepageState extends ConsumerState<Homepage> {
     super.initState();
   }
 
-  final Prioritytask prioritytask = Prioritytask(
-      miniTasksList: {},
-      title: "Drawing Test",
-      description: "I am here",
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
-      id: "25",
-      status: false);
-  final Prioritytask prioritytask2 = Prioritytask(
-      miniTasksList: {},
-      title: "TEst 2 ",
-      description: "I'm still standing",
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
-      id: "12",
-      status: false);
   final pages = [const Home(), const Calendar(), const Profile()];
   int index = 0;
+  Prioritytaskmodel test2 = Prioritytaskmodel(
+    id: "0",
+    miniTasks: {
+      "0": Minitaskmodel(name: "making first Test", status: true, id: "0"),
+      "1": Minitaskmodel(name: "making second Test", status: false, id: "1"),
+    },
+    title: "Testing function",
+    description: "Trying to test the model",
+    startDate: dateFormat.parse("July 27, 2024 at 1:06:24 AM"),
+    endDate: dateFormat.parse("July 28, 2024 at 1:06:51 AM"),
+    status: false,
+    color: const Color(0xff362075),
+  );
   @override
   Widget build(BuildContext context) {
     TaskmanagementRepositoryImplementation taskmanag =
@@ -69,8 +68,9 @@ class _HomepageState extends ConsumerState<Homepage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              Createnewpriorusecase(taskmanag).call(prioritytask2);
+            onTap: () async {
+              final res = await Createnewpriorusecase(taskmanag).call(test2);
+              res.fold((l) => print(l.errMessage), (r) => print("Task added"));
               print("Notification clickedd");
             },
             child: Container(
@@ -86,9 +86,13 @@ class _HomepageState extends ConsumerState<Homepage> {
       ),
       body: RefreshIndicator(
           onRefresh: () async {
-            return ref.refresh(userStateProvider);
+            ref.refresh(userStateProvider.notifier);
+            ref.invalidate(dailyTasksStateProvider);
+            ref.invalidate(priorityTasksStateProvider);
+            await ref.refresh(dailyTasksStateProvider(ref).future);
+            return await ref.refresh(priorityTasksStateProvider(ref).future);
           },
-          child: pages[index]),
+          child: ListView(children: [pages[index]])),
       bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,

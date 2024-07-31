@@ -32,6 +32,7 @@ void main() {
       startDate: DateTime.utc(2024, 7, 26, 23, 12, 28),
       endDate: DateTime.utc(2024, 7, 27, 23, 12, 43),
       status: false,
+      color: Colors.red,
     ),
   ];
 

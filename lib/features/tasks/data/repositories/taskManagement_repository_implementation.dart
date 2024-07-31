@@ -143,12 +143,14 @@ class TaskmanagementRepositoryImplementation
       List<Prioritytask> tasks = [];
       Either<Failure, Map<String, dynamic>> res =
           await remoteDataSource.getPriorityTasks_remote();
-      res.fold((fail) => left(fail), (pTask) {
+      final Either<Failure, List<Prioritytask>> out =
+          res.fold((fail) => left(fail), (pTask) {
         pTask.forEach((key, value) {
-          Prioritytaskmodel.fromJson(value).toEntity();
+          tasks.add(Prioritytaskmodel.fromJson(value).toEntity());
         });
+        return Right(tasks);
       });
-      return Right(tasks);
+      return out;
     } else {
       return localDataSource.getPriorityTasks();
     }

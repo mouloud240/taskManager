@@ -4,6 +4,7 @@ import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
 import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/Daily_taskTile.dart';
+import 'package:task_manager/features/tasks/presentation/widgets/Priority_taskTile.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -57,10 +58,19 @@ class _HomeState extends ConsumerState<Home> {
           priorityValue.when(
             data: (res) {
               return res.fold((fail) => Text(fail.errMessage), (tasks) {
-                if (tasks.isEmpty) {
-                  return const Text("Diam");
-                }
-                return Text(tasks[0].title);
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.23,
+                  child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return PriorityTasktile(prioritytask: tasks[index]);
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                            width: 10,
+                          ),
+                      itemCount: tasks.length),
+                );
               });
             },
             error: (error, stackTrace) => Text(error.toString()),
@@ -85,9 +95,7 @@ class _HomeState extends ConsumerState<Home> {
                       shrinkWrap: true,
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
-                        return DailyTasktile(
-                          dailyTask: tasks[index],
-                        );
+                        return DailyTasktile(dailyTask: tasks[index]);
                       });
                 });
               },
