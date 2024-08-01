@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
+import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
 
 final colors = [
   Colors.red,
@@ -22,73 +24,114 @@ class PriorityTasktile extends StatelessWidget {
   const PriorityTasktile({super.key, required this.prioritytask});
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height * 0.23,
-        width: MediaQuery.of(context).size.width * 0.344,
-        decoration: BoxDecoration(
-          color: prioritytask.color,
-          borderRadius: BorderRadius.circular(10),
-          image: const DecorationImage(
-            image: AssetImage('lib/core/assets/images/bg.png'),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "${prioritytask.getRemainingTime().toString()} days",
-                      style: const TextStyle(
-                          color: Appcolors.headerColor, fontSize: 12),
-                    ),
-                  ),
-                )
-              ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Prioritytaskview(
+                  model: prioritytask,
+                )));
+      },
+      child: Container(
+          height: MediaQuery.of(context).size.height * 0.23,
+          width: MediaQuery.of(context).size.width * 0.344,
+          decoration: BoxDecoration(
+            color: prioritytask.color,
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage('lib/core/assets/images/bg.png'),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  prioritytask.icon == null
-                      ? SvgPicture.asset(
-                          'lib/core/assets/icons/default.svg',
-                          width: 20,
-                          height: 20,
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: prioritytask.icon,
-                        ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    child: Text(
-                      prioritytask.title,
-                      style: const TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        "${prioritytask.getRemainingTime().toString()} days",
+                        style: const TextStyle(
+                            color: Appcolors.headerColor, fontSize: 12),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    prioritytask.icon == null
+                        ? SvgPicture.asset(
+                            'lib/core/assets/icons/default.svg',
+                            width: 20,
+                            height: 20,
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: prioritytask.icon,
+                          ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                      child: Text(
+                        prioritytask.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.03),
+                    child: const Text(
+                      "Progress",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15),
+                    ),
+                  ),
+                  ProgressBar(
+                    prioritytask: prioritytask,
+                    width: MediaQuery.of(context).size.width * 0.344,
+                    background: Colors.grey[700],
+                    foreground: Colors.white,
+                    displayprogress: false,
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Text(
+                        "${prioritytask.calculateprogress()}%",
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            ProgressBar(prioritytask: prioritytask),
-          ],
-        ));
+              )
+            ],
+          )),
+    );
   }
 }
 
@@ -96,7 +139,17 @@ class ProgressBar extends StatelessWidget {
   const ProgressBar({
     super.key,
     required this.prioritytask,
+    required this.width,
+    required this.foreground,
+    required this.background,
+    required this.displayprogress,
+    required this.height,
   });
+  final double width;
+  final Color? foreground;
+  final Color? background;
+  final bool displayprogress;
+  final double height;
 
   final Prioritytask prioritytask;
 
@@ -107,40 +160,34 @@ class ProgressBar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Progress",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15),
-            ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey[700],
+                color: background,
                 borderRadius: BorderRadius.circular(10),
               ),
-              height: 10,
-              width: MediaQuery.of(context).size.width * 0.344,
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    height: 10,
-                    width: MediaQuery.of(context).size.width *
-                        0.344 *
-                        (prioritytask.calculateprogress() / 100),
+              height: height,
+              width: width,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: foreground,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Text(
-                "${prioritytask.calculateprogress()}%",
-                style: const TextStyle(color: Colors.white),
+                  height: height,
+                  width: width * (prioritytask.calculateprogress() / 100),
+                  child: displayprogress
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Center(
+                            child: Text(
+                              " ${prioritytask.calculateprogress().toString()}%",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
               ),
             ),
           ],

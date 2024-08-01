@@ -14,7 +14,6 @@ int convertToInt(Color? color) {
 }
 
 Color convertToColor(int intColor) {
-  print(Color(intColor));
   return Color(intColor);
 }
 

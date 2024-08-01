@@ -15,6 +15,7 @@ import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
+import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
 import 'package:task_manager/firebase_options.dart';
 
@@ -44,8 +45,11 @@ class MyApp extends StatelessWidget {
     final connectionInfo = NetworkInfoImpl(DataConnectionChecker());
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme:
-            ThemeData(fontFamily: "Sofia pro", splashColor: Colors.transparent),
+        theme: ThemeData(
+            appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+            scaffoldBackgroundColor: Colors.white,
+            fontFamily: "Sofia pro",
+            splashColor: Colors.transparent),
         routes: {
           "login": (context) => const LoginPage(),
           'home': (context) => const Homepage(),
