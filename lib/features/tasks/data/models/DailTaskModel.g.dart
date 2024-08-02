@@ -22,13 +22,14 @@ class DailtaskmodelAdapter extends TypeAdapter<Dailtaskmodel> {
       startDate: fields[2] as DateTime,
       endDate: fields[3] as DateTime,
       id: fields[4] as String,
+      status: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Dailtaskmodel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class DailtaskmodelAdapter extends TypeAdapter<Dailtaskmodel> {
       ..writeByte(3)
       ..write(obj.endDate)
       ..writeByte(4)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.status);
   }
 
   @override

@@ -10,6 +10,7 @@
 analyzer:
   errors:
     avoid_print: ignore
+    avoid_renaming_method_parameters: ignore
     file_names: ignore
     library_prefixes: ignore
 include: package:flutter_lints/flutter.yaml

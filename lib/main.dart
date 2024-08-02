@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_manager/core/connection/network_info.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
@@ -14,6 +15,7 @@ import 'package:task_manager/features/auth/presentation/screens/authpages/loginp
 import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
+import 'package:task_manager/features/tasks/data/models/colorAdapter.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
@@ -22,15 +24,15 @@ import 'package:task_manager/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-
+  Hive.registerAdapter(MyColorAdapter());
+  Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(MinitaskmodelAdapter());
-  Hive.registerAdapter(PrioritytaskmodelAdapter());
   Hive.registerAdapter(DailtaskmodelAdapter());
 
   final userBox = await Hive.openBox("User");
-  final priotasksBox = await Hive.openBox("PrioTasks");
-  final dailytasksbox = await Hive.openBox<Dailytask>("DailyTasks");
+  final priotasksBox = await Hive.openBox("NewPriorityTasks");
+  final dailytasksbox = await Hive.openBox<Dailytask>("MyDailyTasks");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));

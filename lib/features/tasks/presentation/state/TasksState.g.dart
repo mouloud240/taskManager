@@ -7,7 +7,7 @@ part of 'TasksState.dart';
 // **************************************************************************
 
 String _$priorityTasksStateHash() =>
-    r'80c623d578dca2a73e98b43121a41889e252a279';
+    r'2ec481352f3fa96d1e70192fbf053f7d62ea942e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -174,7 +174,7 @@ class _PriorityTasksStateProviderElement
   WidgetRef get remoteref => (origin as PriorityTasksStateProvider).remoteref;
 }
 
-String _$dailyTasksStateHash() => r'eee48546e8def8198b7179aa1802b5ef7af2d3e8';
+String _$dailyTasksStateHash() => r'a7f78d491e25da36c85e0a8fe5ebb8d04f6448d9';
 
 abstract class _$dailyTasksState extends BuildlessAutoDisposeAsyncNotifier<
     Either<Failure, List<Dailytask>>> {

@@ -25,13 +25,14 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       miniTasks: (fields[4] as Map).cast<String, Minitaskmodel>(),
       id: fields[6] as String,
       color: fields[8] as Color?,
+      status: fields[7],
     );
   }
 
   @override
   void write(BinaryWriter writer, Prioritytaskmodel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -45,7 +46,11 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       ..writeByte(5)
       ..write(obj.icon)
       ..writeByte(6)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(7)
+      ..write(obj.status)
+      ..writeByte(8)
+      ..write(obj.color);
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
@@ -96,35 +95,27 @@ class PriorityTasktile extends StatelessWidget {
                 ),
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.03),
-                    child: const Text(
-                      "Progress",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ),
+                  const Text(
+                    "Progress",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15),
                   ),
                   ProgressBar(
                     prioritytask: prioritytask,
                     width: MediaQuery.of(context).size.width * 0.344,
-                    background: Colors.grey[700],
+                    background: Colors.grey[700] as Color,
                     foreground: Colors.white,
                     displayprogress: false,
                     height: 10,
                   ),
                   Align(
                     alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Text(
-                        "${prioritytask.calculateprogress()}%",
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                    child: Text(
+                      "${prioritytask.calculateprogress()}%",
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -145,52 +136,53 @@ class ProgressBar extends StatelessWidget {
     required this.displayprogress,
     required this.height,
   });
+
   final double width;
-  final Color? foreground;
-  final Color? background;
+  final Color foreground;
+  final Color background;
   final bool displayprogress;
   final double height;
-
   final Prioritytask prioritytask;
 
   @override
   Widget build(BuildContext context) {
+    double progress = prioritytask.calculateprogress().toDouble();
+    double progressWidth = (width * progress) / 100;
+
     return Padding(
-        padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: background,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              height: height,
-              width: width,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 2),
-                child: Container(
+      padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Container(
+                  width:
+                      progressWidth, 
                   decoration: BoxDecoration(
                     color: foreground,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  height: height,
-                  width: width * (prioritytask.calculateprogress() / 100),
-                  child: displayprogress
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Center(
-                            child: Text(
-                              " ${prioritytask.calculateprogress().toString()}%",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        )
-                      : null,
                 ),
-              ),
+                if (displayprogress)
+                  Center(
+                    child: Text(
+                      "${progress.toInt().toString()}%",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

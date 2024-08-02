@@ -1,7 +1,9 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_manager/core/colors.dart';
+import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
@@ -43,19 +45,16 @@ class _MiniTasktileState extends ConsumerState<MiniTasktile> {
           status = !status;
           widget.minitask.status = status;
         });
-        EditTaskInpriorityUsecase(taskManage).call(
+        await EditTaskInpriorityUsecase(taskManage).call(
             widget.prioritytask,
             Minitask(
               name: widget.minitask.name,
               id: widget.minitask.id,
               status: status,
             ));
-        // Refresh the state
-        setState(() {
-          widget.prioritytask.calculateprogress();
-          ref.refresh(priorityTasksStateProvider(ref).future);
-          ref.invalidate(priorityTasksStateProvider(ref));
-        });
+        ref.invalidate(priorityTasksStateProvider(ref));
+        print("Updated task status in Firebase");
+        return ref.refresh(priorityTasksStateProvider(ref));
       },
       child: Container(
           padding: const EdgeInsets.all(15),

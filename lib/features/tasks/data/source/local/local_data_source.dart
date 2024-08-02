@@ -9,8 +9,8 @@ import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 
 class LocalDataSource {
-  final Box prioBox = Hive.box("PrioTasks");
-  final Box dailyBox = Hive.box<Dailytask>("DailyTasks");
+  final Box prioBox = Hive.box("NewPriorityTasks");
+  final Box dailyBox = Hive.box<Dailytask>("MyDailyTasks");
   //create
   Future<Either<Failure, void>> createNewDailyTask(
       Dailtaskmodel dailytask) async {
@@ -42,7 +42,8 @@ class LocalDataSource {
       return Left(Failure(errMessage: e.toString()));
     }
   }
- //update
+
+  //update
   Future<Either<Failure, void>> updatePriorityTask(
       Prioritytaskmodel priorityTask) async {
     try {
@@ -72,6 +73,7 @@ class LocalDataSource {
       return Left(Failure(errMessage: e.toString()));
     }
   }
+
 //delete
   Future<Either<Failure, void>> deleteMiniTask(
       Prioritytaskmodel priorityTask, Minitaskmodel miniTask) async {
@@ -101,6 +103,7 @@ class LocalDataSource {
       return Left(Failure(errMessage: e.toString()));
     }
   }
+
 //read
   Future<Either<Failure, List<Dailytask>>> getDailyTasks() async {
     try {
@@ -117,5 +120,4 @@ class LocalDataSource {
       return Left(Failure(errMessage: e.toString()));
     }
   }
-
 }

@@ -19,12 +19,21 @@ final local = LocalDataSource();
 
 @riverpod
 class priorityTasksState extends _$priorityTasksState {
-  @override
-  Future<Either<Failure, List<Prioritytask>>> build(WidgetRef remoteref) async {
-    final remote = RemoteDataSource(remoteref);
+  Future<Either<Failure, List<Prioritytask>>> fetchList(WidgetRef ref) async {
+    final remote = RemoteDataSource(ref);
     final taskRepoImplentation = TaskmanagementRepositoryImplementation(
         localDataSource: local, remoteDataSource: remote);
     return Getprioritytasksusecase(taskRepoImplentation).call();
+  }
+
+  @override
+  Future<Either<Failure, List<Prioritytask>>> build(WidgetRef remoteref) async {
+    return fetchList(remoteref);
+  }
+
+  Future<void> Update(WidgetRef myref) async {
+    state = AsyncData(await fetchList(myref));
+    ref.invalidateSelf();
   }
 }
 
