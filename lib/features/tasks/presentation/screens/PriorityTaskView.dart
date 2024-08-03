@@ -274,6 +274,7 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                         color: Appcolors.subHeaderColor),
                   ),
                   ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return MiniTasktile(
@@ -285,7 +286,6 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                             height: 10,
                           ),
                       itemCount: widget.model.miniTasksList.length),
-               
                 ],
               ),
             ),

@@ -83,7 +83,7 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.dailyTask.description,
+                widget.dailyTask.title,
                 style: TextStyle(
                     color: status ? Appcolors.brandColor : Colors.black,
                     fontWeight: FontWeight.w500,
