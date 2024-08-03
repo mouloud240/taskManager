@@ -52,7 +52,9 @@ class _MiniTasktileState extends ConsumerState<MiniTasktile> {
               id: widget.minitask.id,
               status: status,
             ));
-        ref.invalidate(priorityTasksStateProvider(ref));
+        ref.invalidate(dailyTasksStateProvider);
+        ref.invalidate(priorityTasksStateProvider);
+
         print("Updated task status in Firebase");
         return ref.refresh(priorityTasksStateProvider(ref));
       },

@@ -52,6 +52,8 @@ dependencies:
   viewport: ^0.2.0
   google_fonts: ^6.2.1
   date_utils: ^0.2.0
+  table_calendar: 3.0.8
+  uuid:
  
 
 dev_dependencies:

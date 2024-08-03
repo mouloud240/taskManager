@@ -7,6 +7,7 @@ import 'package:task_manager/features/tasks/data/source/local/local_data_source.
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/domain/usecases/createNewDailyUsecase.dart';
+import 'package:task_manager/features/tasks/domain/usecases/deletes.dart';
 import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 
 class DailyTasktile extends ConsumerStatefulWidget {
@@ -33,6 +34,10 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
         localDataSource: LocalDataSource());
 
     return GestureDetector(
+      onLongPress: () {
+        DeleteDailyTaskUsecase(taskManage).call(widget.dailyTask);
+        ref.invalidate(dailyTasksStateProvider);
+      },
       onTap: () async {
         setState(() {
           status = !status; // Update the local status

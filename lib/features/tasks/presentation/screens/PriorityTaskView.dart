@@ -284,7 +284,8 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                       separatorBuilder: (context, index) => const SizedBox(
                             height: 10,
                           ),
-                      itemCount: widget.model.miniTasksList.length)
+                      itemCount: widget.model.miniTasksList.length),
+               
                 ],
               ),
             ),

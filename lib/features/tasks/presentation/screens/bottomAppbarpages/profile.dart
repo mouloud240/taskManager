@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_manager/core/colors.dart';
+import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
+import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
+import 'package:task_manager/features/auth/domain/usecases/logout.dart';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({super.key});
@@ -9,11 +13,24 @@ class Profile extends ConsumerStatefulWidget {
 }
 
 class _ProfileState extends ConsumerState<Profile> {
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Profile"),
+    return Column(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              LogoutUsecase(
+                      UserAuthRepositoryImplementation(RemoteAuth(ref: ref)))
+                  .call();
+            },
+            child: const Icon(
+              Icons.logout,
+              color: Appcolors.brandColor,
+            )),
+        Container(
+          child: const Text("Profile"),
+        ),
+      ],
     );
   }
 }

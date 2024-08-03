@@ -43,7 +43,7 @@ class RemoteAuth {
     try {
       await fireauth.signOut();
       local.removeCurrentUser();
-      return const Right(Void);
+      return const Right(unit);
     } on FirebaseAuthException catch (e) {
       return Left(Failure(errMessage: e.code));
     }

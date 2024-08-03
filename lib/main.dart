@@ -17,6 +17,7 @@ import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/colorAdapter.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
+import 'package:task_manager/features/tasks/presentation/screens/CreatenewTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
 import 'package:task_manager/firebase_options.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
           "login": (context) => const LoginPage(),
           'home': (context) => const Homepage(),
           "signUp": (context) => const SignupPage(),
+          "create":(context)=>const Createnewtask()
         },
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),

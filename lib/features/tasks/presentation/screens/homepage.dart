@@ -33,7 +33,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   final pages = [const Home(), const Calendar(), const Profile()];
   int index = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     TaskmanagementRepositoryImplementation taskmanag =
@@ -57,7 +57,6 @@ class _HomepageState extends ConsumerState<Homepage> {
         actions: [
           GestureDetector(
             onTap: () async {
-            
               print("Notification clickedd");
             },
             child: Container(
@@ -73,13 +72,19 @@ class _HomepageState extends ConsumerState<Homepage> {
       ),
       body: RefreshIndicator(
           onRefresh: () async {
-            ref.refresh(userStateProvider.notifier);
             ref.invalidate(dailyTasksStateProvider);
             ref.invalidate(priorityTasksStateProvider);
-            await ref.refresh(dailyTasksStateProvider(ref).future);
             return await ref.refresh(priorityTasksStateProvider(ref).future);
           },
-          child: ListView(children: [pages[index]])),
+          child: ListView(children: [
+            pages[index],
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed("create");
+              },
+              child: const Icon(Icons.add),
+            )
+          ])),
       bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,

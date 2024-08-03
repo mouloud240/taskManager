@@ -192,7 +192,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                           db.collection("users").doc(usercred.user!.uid).set({
                             "username": usernameController.text,
                             "email": emailController.text,
-                            "password": passwordController.text
+                            "password": passwordController.text,
+                            "priorityTasks": {},
+                            "dailyTasks": {}
                           });
 
                           // LoginUsecase(userauthImpl).call(emailController.text, passwordController.text);
