@@ -32,6 +32,8 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
 
   @override
   Widget build(BuildContext context) {
+    final remainingTime = widget.model.getdiffernce();
+
     final asyncval = ref.watch(priorityTasksStateProvider(ref));
     return Scaffold(
       appBar: AppBar(
@@ -133,16 +135,16 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                         decoration: BoxDecoration(
                             color: Appcolors.brandColor,
                             borderRadius: BorderRadius.circular(20)),
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("0",
-                                style: TextStyle(
+                            Text(remainingTime["months"].toString(),
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700)),
-                            Text(
+                            const Text(
                               "months",
                               style: TextStyle(
                                   color: Colors.white,
@@ -170,16 +172,16 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                         decoration: BoxDecoration(
                             color: Appcolors.brandColor,
                             borderRadius: BorderRadius.circular(20)),
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("12",
-                                style: TextStyle(
+                            Text(remainingTime['days'].toString(),
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700)),
-                            Text(
+                            const Text(
                               "days",
                               style: TextStyle(
                                   color: Colors.white,
@@ -207,16 +209,16 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
                         decoration: BoxDecoration(
                             color: Appcolors.brandColor,
                             borderRadius: BorderRadius.circular(20)),
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("18",
-                                style: TextStyle(
+                            Text(remainingTime['hours'].toString(),
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700)),
-                            Text(
+                            const Text(
                               "hours",
                               style: TextStyle(
                                   color: Colors.white,

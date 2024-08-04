@@ -34,6 +34,19 @@ class Prioritytask extends Task {
   }
 
   getRemainingTime() {
+    print(getdiffernce());
     return endDate.difference(DateTime.now()).inDays;
+  }
+
+  Map<String, dynamic> getdiffernce() {
+    var daysdiff = endDate.difference(DateTime.now()).inDays;
+    if (daysdiff < 0) {
+      return {"days": 0, "hours": 0, "months": 0};
+    }
+    var hoursdiff = endDate.difference(DateTime.now()).inHours;
+    var monthsDiff = daysdiff ~/ 30;
+    daysdiff = daysdiff % 30;
+    hoursdiff = hoursdiff % 24;
+    return {"days": daysdiff, "hours": hoursdiff, "months": monthsDiff};
   }
 }
