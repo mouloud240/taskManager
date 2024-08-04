@@ -91,8 +91,9 @@ class _HomepageState extends ConsumerState<Homepage> {
       bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          type: BottomNavigationBarType.shifting,
+          type: BottomNavigationBarType.fixed,
           fixedColor: Colors.white,
+          backgroundColor: Colors.white,
           elevation: 0,
           items: [
             BottomNavigationBarItem(

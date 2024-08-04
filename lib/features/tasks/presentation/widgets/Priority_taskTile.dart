@@ -31,9 +31,9 @@ class PriorityTasktile extends StatelessWidget {
                 )));
       },
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4),
         child: Container(
-            height: MediaQuery.of(context).size.height * 0.23,
+            height: MediaQuery.of(context).size.height * 0.24,
             width: MediaQuery.of(context).size.width * 0.344,
             decoration: BoxDecoration(
               boxShadow: const [
@@ -44,7 +44,7 @@ class PriorityTasktile extends StatelessWidget {
                     blurStyle: BlurStyle.outer)
               ],
               color: prioritytask.color,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
               image: const DecorationImage(
                 image: AssetImage('lib/core/assets/images/bg.png'),
               ),
@@ -105,12 +105,18 @@ class PriorityTasktile extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    const Text(
-                      "Progress",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 8  ),
+                        child: Text(
+                          "Progress",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15),
+                        ),
+                      ),
                     ),
                     ProgressBar(
                       prioritytask: prioritytask,
@@ -122,9 +128,12 @@ class PriorityTasktile extends StatelessWidget {
                     ),
                     Align(
                       alignment: Alignment.topRight,
-                      child: Text(
-                        "${prioritytask.calculateprogress()}%",
-                        style: const TextStyle(color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          "${prioritytask.calculateprogress()}%",
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
@@ -158,7 +167,6 @@ class ProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     double progress = prioritytask.calculateprogress().toDouble();
     double progressWidth = (width * progress) / 100;
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: Column(

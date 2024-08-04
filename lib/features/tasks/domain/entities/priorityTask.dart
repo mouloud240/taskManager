@@ -34,7 +34,6 @@ class Prioritytask extends Task {
   }
 
   getRemainingTime() {
-    print(getdiffernce());
     return endDate.difference(DateTime.now()).inDays;
   }
 

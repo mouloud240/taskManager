@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:dartz/dartz.dart' as dz;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_manager/core/colors.dart';
+import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
@@ -28,6 +31,7 @@ final colors = [
   Colors.orange,
   const Color(0xff362075),
 ];
+
 final random = Random();
 
 class Createnewtask extends ConsumerStatefulWidget {
@@ -43,16 +47,15 @@ late TextEditingController titleController;
 late TextEditingController descriptionController;
 
 TextEditingController miniTasknameContoller = TextEditingController();
-Map<String, Minitask> miniTasks = {
-  "0": Minitask(name: "Test", id: "0", status: false),
-  "1": Minitask(name: "not Test", id: "1", status: false),
-};
+Map<String, Minitask> miniTasks = {};
 
 class _CreatenewtaskState extends ConsumerState<Createnewtask> {
   @override
   void initState() {
+    super.initState();
     titleController = TextEditingController();
     descriptionController = TextEditingController();
+    miniTasks = {};
   }
 
   @override
@@ -169,93 +172,97 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                                                 .size
                                                                 .width *
                                                             0.84,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.429,
-                                                    child: TableCalendar(
-                                                      selectedDayPredicate:
-                                                          (day) {
-                                                        return isSameDay(
-                                                            startDate, day);
-                                                      },
-                                                      calendarStyle:
-                                                          const CalendarStyle(
-                                                              todayDecoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .blueGrey,
-                                                                  shape: BoxShape
-                                                                      .circle),
-                                                              selectedDecoration:
-                                                                  BoxDecoration(
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              )),
-                                                      daysOfWeekStyle: const DaysOfWeekStyle(
-                                                          weekdayStyle: TextStyle(
-                                                              color: Appcolors
-                                                                  .textColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                          weekendStyle: TextStyle(
-                                                              color: Appcolors
-                                                                  .brandColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                      weekendDays: const [
-                                                        DateTime.friday,
-                                                        DateTime.saturday
-                                                      ],
-                                                      headerStyle:
-                                                          const HeaderStyle(
-                                                              leftChevronIcon:
-                                                                  Icon(
-                                                                Icons
-                                                                    .arrow_left_sharp,
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                size: 40,
-                                                              ),
-                                                              rightChevronIcon:
-                                                                  Icon(
-                                                                Icons
-                                                                    .arrow_right_sharp,
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                size: 40,
-                                                              ),
-                                                              formatButtonVisible:
-                                                                  false,
-                                                              titleCentered:
-                                                                  true,
-                                                              titleTextStyle: TextStyle(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TableCalendar(
+                                                          selectedDayPredicate:
+                                                              (day) {
+                                                            return isSameDay(
+                                                                startDate, day);
+                                                          },
+                                                          calendarStyle:
+                                                              const CalendarStyle(
+                                                                  todayDecoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .blueGrey,
+                                                                      shape: BoxShape
+                                                                          .circle),
+                                                                  selectedDecoration:
+                                                                      BoxDecoration(
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                  )),
+                                                          daysOfWeekStyle: const DaysOfWeekStyle(
+                                                              weekdayStyle: TextStyle(
                                                                   color: Appcolors
-                                                                      .brandColor,
-                                                                  fontSize: 18,
+                                                                      .textColor,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w600)),
-                                                      focusedDay: startDate,
-                                                      firstDay: DateTime.utc(
-                                                          2010, 01, 01),
-                                                      lastDay: DateTime.utc(
-                                                          2030, 12, 12),
-                                                      onDaySelected:
-                                                          (selectedDay,
-                                                              focusDay) {
-                                                        setState(() {
-                                                          startDate =
-                                                              selectedDay;
-                                                          focusDay =
-                                                              selectedDay;
-                                                        });
-                                                        Navigator.pop(context);
-                                                      },
+                                                                          .w500),
+                                                              weekendStyle: TextStyle(
+                                                                  color: Appcolors
+                                                                      .brandColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                          weekendDays: const [
+                                                            DateTime.friday,
+                                                            DateTime.saturday
+                                                          ],
+                                                          headerStyle:
+                                                              const HeaderStyle(
+                                                                  leftChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_left_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  rightChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_right_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  formatButtonVisible:
+                                                                      false,
+                                                                  titleCentered:
+                                                                      true,
+                                                                  titleTextStyle: TextStyle(
+                                                                      color: Appcolors
+                                                                          .brandColor,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600)),
+                                                          focusedDay: startDate,
+                                                          firstDay:
+                                                              DateTime.utc(
+                                                                  2010, 01, 01),
+                                                          lastDay: DateTime.utc(
+                                                              2030, 12, 12),
+                                                          onDaySelected:
+                                                              (selectedDay,
+                                                                  focusDay) {
+                                                            setState(() {
+                                                              startDate =
+                                                                  selectedDay;
+                                                              focusDay =
+                                                                  selectedDay;
+                                                            });
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
                                                     ),
                                                   ));
                                             });
@@ -327,92 +334,97 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                                                 .size
                                                                 .width *
                                                             0.84,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.429,
-                                                    child: TableCalendar(
-                                                      selectedDayPredicate:
-                                                          (day) {
-                                                        return isSameDay(
-                                                            endDate, day);
-                                                      },
-                                                      calendarStyle:
-                                                          const CalendarStyle(
-                                                              todayDecoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .blueGrey,
-                                                                  shape: BoxShape
-                                                                      .circle),
-                                                              selectedDecoration:
-                                                                  BoxDecoration(
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              )),
-                                                      daysOfWeekStyle: const DaysOfWeekStyle(
-                                                          weekdayStyle: TextStyle(
-                                                              color: Appcolors
-                                                                  .textColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                          weekendStyle: TextStyle(
-                                                              color: Appcolors
-                                                                  .brandColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                      weekendDays: const [
-                                                        DateTime.friday,
-                                                        DateTime.saturday
-                                                      ],
-                                                      headerStyle:
-                                                          const HeaderStyle(
-                                                              leftChevronIcon:
-                                                                  Icon(
-                                                                Icons
-                                                                    .arrow_left_sharp,
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                size: 40,
-                                                              ),
-                                                              rightChevronIcon:
-                                                                  Icon(
-                                                                Icons
-                                                                    .arrow_right_sharp,
-                                                                color: Appcolors
-                                                                    .brandColor,
-                                                                size: 40,
-                                                              ),
-                                                              formatButtonVisible:
-                                                                  false,
-                                                              titleCentered:
-                                                                  true,
-                                                              titleTextStyle: TextStyle(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TableCalendar(
+                                                          selectedDayPredicate:
+                                                              (day) {
+                                                            return isSameDay(
+                                                                endDate, day);
+                                                          },
+                                                          calendarStyle:
+                                                              const CalendarStyle(
+                                                                  todayDecoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .blueGrey,
+                                                                      shape: BoxShape
+                                                                          .circle),
+                                                                  selectedDecoration:
+                                                                      BoxDecoration(
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                  )),
+                                                          daysOfWeekStyle: const DaysOfWeekStyle(
+                                                              weekdayStyle: TextStyle(
                                                                   color: Appcolors
-                                                                      .brandColor,
-                                                                  fontSize: 18,
+                                                                      .textColor,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w600)),
-                                                      focusedDay: endDate,
-                                                      firstDay: DateTime.utc(
-                                                          2010, 01, 01),
-                                                      lastDay: DateTime.utc(
-                                                          2030, 12, 12),
-                                                      onDaySelected:
-                                                          (selectedDay,
-                                                              focusDay) {
-                                                        setState(() {
-                                                          endDate = selectedDay;
-                                                          focusDay =
-                                                              selectedDay;
-                                                        });
-                                                        Navigator.pop(context);
-                                                      },
+                                                                          .w500),
+                                                              weekendStyle: TextStyle(
+                                                                  color: Appcolors
+                                                                      .brandColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                          weekendDays: const [
+                                                            DateTime.friday,
+                                                            DateTime.saturday
+                                                          ],
+                                                          headerStyle:
+                                                              const HeaderStyle(
+                                                                  leftChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_left_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  rightChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_right_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  formatButtonVisible:
+                                                                      false,
+                                                                  titleCentered:
+                                                                      true,
+                                                                  titleTextStyle: TextStyle(
+                                                                      color: Appcolors
+                                                                          .brandColor,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600)),
+                                                          focusedDay: endDate,
+                                                          firstDay:
+                                                              DateTime.utc(
+                                                                  2010, 01, 01),
+                                                          lastDay: DateTime.utc(
+                                                              2030, 12, 12),
+                                                          onDaySelected:
+                                                              (selectedDay,
+                                                                  focusDay) {
+                                                            setState(() {
+                                                              endDate =
+                                                                  selectedDay;
+                                                              focusDay =
+                                                                  selectedDay;
+                                                            });
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
                                                     ),
                                                   ));
                                             });
@@ -566,7 +578,7 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                             height: 10,
                           ),
                           TextField(
-                            maxLines: 5,
+                            maxLines: 6,
                             controller: descriptionController,
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
@@ -1028,7 +1040,7 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                       RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(15)))),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (endDate.difference(startDate).inDays < 0) {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
@@ -1044,8 +1056,9 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                   return;
                                 }
                                 if (selectedType == "Daily") {
-                                  final res =
-                                      Createnewdailyusecase(taksmanagementrepo)
+                                  final dz.Either<Failure, void> res =
+                                      await Createnewdailyusecase(
+                                              taksmanagementrepo)
                                           .call(Dailytask(
                                               title: titleController.text,
                                               description:
@@ -1056,10 +1069,25 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                               status: false));
                                   ref.invalidate(dailyTasksStateProvider);
                                   ref.refresh(dailyTasksStateProvider(ref));
-                                  Navigator.of(context).pop();
+                                  res.fold((fail) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            content: Text(
+                                      fail.errMessage,
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    )));
+                                  }, (_) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            const createNewTasksucces());
+                                  });
                                 } else if (selectedType == "Priority") {
-                                  final res =
-                                      Createnewpriorusecase(taksmanagementrepo)
+                                  final dz.Either<Failure, void> res =
+                                      await Createnewpriorusecase(
+                                              taksmanagementrepo)
                                           .call(Prioritytask(
                                               title: titleController.text,
                                               description:
@@ -1076,7 +1104,21 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                   setState(() {
                                     miniTasks = {};
                                   });
-                                  Navigator.of(context).pop();
+                                  res.fold((fail) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            content: Text(
+                                      fail.errMessage,
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    )));
+                                  }, (_) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            const createNewTasksucces());
+                                  });
                                 }
                               },
                               child: const Text(
@@ -1095,5 +1137,103 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
             )
           ],
         ));
+  }
+}
+
+class createNewTasksucces extends StatefulWidget {
+  const createNewTasksucces({
+    super.key,
+  });
+
+  @override
+  State<createNewTasksucces> createState() => _createNewTasksuccesState();
+}
+
+class _createNewTasksuccesState extends State<createNewTasksucces>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 3000));
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
+    _animationController.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      content: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: MediaQuery.of(context).size.width * 0.14,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                color: Appcolors.brandColor.withOpacity(_animation.value),
+              ),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 45,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            const Text(
+              "new task has been created \nsuccessfully",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Appcolors.brandColor),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(Size(
+                        MediaQuery.of(context).size.width * 0.6,
+                        MediaQuery.of(context).size.height * 0.07)),
+                    backgroundColor:
+                        const WidgetStatePropertyAll(Appcolors.brandColor),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)))),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("home");
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Back",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }
