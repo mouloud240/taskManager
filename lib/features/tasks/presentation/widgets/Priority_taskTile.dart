@@ -30,98 +30,108 @@ class PriorityTasktile extends StatelessWidget {
                   model: prioritytask,
                 )));
       },
-      child: Container(
-          height: MediaQuery.of(context).size.height * 0.23,
-          width: MediaQuery.of(context).size.width * 0.344,
-          decoration: BoxDecoration(
-            color: prioritytask.color,
-            borderRadius: BorderRadius.circular(10),
-            image: const DecorationImage(
-              image: AssetImage('lib/core/assets/images/bg.png'),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "${prioritytask.getRemainingTime().toString()} days",
-                        style: const TextStyle(
-                            color: Appcolors.headerColor, fontSize: 12),
-                      ),
-                    ),
-                  )
-                ],
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Container(
+            height: MediaQuery.of(context).size.height * 0.23,
+            width: MediaQuery.of(context).size.width * 0.344,
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                    color: Color.fromARGB(255, 99, 96, 96),
+                    blurRadius: 3,
+                    spreadRadius: 0,
+                    blurStyle: BlurStyle.outer)
+              ],
+              color: prioritytask.color,
+              borderRadius: BorderRadius.circular(10),
+              image: const DecorationImage(
+                image: AssetImage('lib/core/assets/images/bg.png'),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    prioritytask.icon == null
-                        ? SvgPicture.asset(
-                            'lib/core/assets/icons/default.svg',
-                            width: 20,
-                            height: 20,
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: prioritytask.icon,
-                          ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      child: Text(
-                        prioritytask.title,
-                        style: const TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                        child: Text(
+                          "${prioritytask.getRemainingTime().toString()} days",
+                          style: const TextStyle(
+                              color: Appcolors.headerColor, fontSize: 12),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      prioritytask.icon == null
+                          ? SvgPicture.asset(
+                              'lib/core/assets/icons/default.svg',
+                              width: 20,
+                              height: 20,
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: prioritytask.icon,
+                            ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        child: Text(
+                          prioritytask.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    const Text(
+                      "Progress",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15),
+                    ),
+                    ProgressBar(
+                      prioritytask: prioritytask,
+                      width: MediaQuery.of(context).size.width * 0.344,
+                      background: Colors.grey[700] as Color,
+                      foreground: Colors.white,
+                      displayprogress: false,
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        "${prioritytask.calculateprogress()}%",
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ],
-                ),
-              ),
-              Column(
-                children: [
-                  const Text(
-                    "Progress",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15),
-                  ),
-                  ProgressBar(
-                    prioritytask: prioritytask,
-                    width: MediaQuery.of(context).size.width * 0.344,
-                    background: Colors.grey[700] as Color,
-                    foreground: Colors.white,
-                    displayprogress: false,
-                    height: 10,
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      "${prioritytask.calculateprogress()}%",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          )),
+                )
+              ],
+            )),
+      ),
     );
   }
 }
@@ -164,8 +174,7 @@ class ProgressBar extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  width:
-                      progressWidth, 
+                  width: progressWidth,
                   decoration: BoxDecoration(
                     color: foreground,
                     borderRadius: BorderRadius.circular(10),

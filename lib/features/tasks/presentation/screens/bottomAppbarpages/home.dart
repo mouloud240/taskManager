@@ -51,6 +51,9 @@ class _HomeState extends ConsumerState<Home> {
                 fontSize: 18,
                 fontWeight: FontWeight.normal),
           ),
+          const SizedBox(
+            height: 15,
+          ),
           const Text(
             "My Priority Tasks",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
@@ -76,6 +79,9 @@ class _HomeState extends ConsumerState<Home> {
             error: (error, stackTrace) => Text(error.toString()),
             loading: () => const CircularProgressIndicator(),
           ),
+          const SizedBox(
+            height: 10,
+          ),
           const Text(
             "Daily Tasks",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
@@ -89,6 +95,7 @@ class _HomeState extends ConsumerState<Home> {
                   return Text(fai.errMessage);
                 }, (tasks) {
                   return ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
                       separatorBuilder: (context, index) => SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02,
                           ),

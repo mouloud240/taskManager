@@ -108,7 +108,6 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                 child: Container(
                   padding: const EdgeInsets.all(15),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
