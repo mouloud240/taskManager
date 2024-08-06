@@ -627,7 +627,7 @@ class _EditdailytaskState extends ConsumerState<Editdailytask> {
                                 });
                               },
                               child: const Text(
-                                "Create Task",
+                                "Edit Task",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,

@@ -13,22 +13,7 @@ class DailytasksTab extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DailytasksTabState();
 }
 
-final List<Dailytask> testDailyTasks = [
-  Dailytask(
-      title: "Work Out",
-      description: "Working Out",
-      startDate: DateTime.now(),
-      endDate: endDate,
-      id: "5",
-      status: false),
-  Dailytask(
-      title: "Learn Coding",
-      description: "Learn to Code",
-      startDate: DateTime.now(),
-      endDate: endDate,
-      id: "9",
-      status: false),
-];
+
 
 class _DailytasksTabState extends ConsumerState<DailytasksTab> {
   @override
@@ -37,11 +22,8 @@ class _DailytasksTabState extends ConsumerState<DailytasksTab> {
     return asyncVal.when(
         data: (res) {
           return res.fold((fail) => Text(fail.errMessage), (tasks) {
-            return ListView.separated(
+            return ListView.builder(
               itemCount: tasks.length,
-              separatorBuilder: (context, index) => SizedBox(
-                height: MediaQuery.of(context).size.height * 0,
-              ),
               itemBuilder: (context, index) =>
                   Dailytaskbigtile(dailytask: tasks[index]),
             );
@@ -49,7 +31,8 @@ class _DailytasksTabState extends ConsumerState<DailytasksTab> {
         },
         error: (error, stackTrace) => Text(error.toString()),
         loading: () {
-          return const CircularProgressIndicator();
+          return const SizedBox(
+              width: 40, height: 40, child: CircularProgressIndicator());
         });
   }
 }

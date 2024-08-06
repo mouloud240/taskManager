@@ -1179,13 +1179,13 @@ class _createNewTasksuccesState extends State<createNewTasksucces>
     return AlertDialog(
       backgroundColor: Colors.white,
       content: Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(2.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.08,
-              width: MediaQuery.of(context).size.width * 0.14,
+              width: MediaQuery.of(context).size.width * 0.15,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 color: Appcolors.brandColor.withOpacity(_animation.value),

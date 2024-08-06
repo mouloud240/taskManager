@@ -9,6 +9,7 @@ import 'package:task_manager/features/tasks/data/source/remote/remote_data_sourc
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/domain/usecases/deletes.dart';
 import 'package:task_manager/features/tasks/presentation/screens/EditDailyTask.dart';
+import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 
 class Dailytaskbigtile extends ConsumerWidget {
   final Dailytask dailytask;
@@ -116,8 +117,10 @@ class editDialog extends ConsumerWidget {
                   ),
                 ),
                 onPressed: () {
-                  // DeleteDailyTaskUsecase(taskmanagementRepository)
-                  //     .call(dailytask);
+                  DeleteDailyTaskUsecase(taskmanagementRepository)
+                      .call(dailytask);
+                  ref.invalidate(dailyTasksStateProvider);
+                  ref.refresh(DailyTasksStateProvider(ref));
                   showDialog(
                       context: context,
                       builder: (context) => const deletedDialog());
