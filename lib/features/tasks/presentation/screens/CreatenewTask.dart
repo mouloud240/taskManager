@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_spacing/responsive_spacing.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/core/failure/failure.dart';
@@ -71,7 +72,7 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
         localDataSource: LocalDataSource(),
         remoteDataSource: RemoteDataSource(ref));
 
-    return Scaffold(
+    return ResponsiveScaffold(
         resizeToAvoidBottomInset: true,
         body: CustomScrollView(
           slivers: [

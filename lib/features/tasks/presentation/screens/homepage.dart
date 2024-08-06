@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_spacing/responsive_spacing.dart';
 import 'package:task_manager/core/colors.dart';
 
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
@@ -45,7 +46,7 @@ class _HomepageState extends ConsumerState<Homepage> {
       localDataSource: LocalDataSource(),
       remoteDataSource: RemoteDataSource(ref),
     );
-    return Scaffold(
+    return ResponsiveScaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(

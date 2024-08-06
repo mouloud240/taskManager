@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/CreatenewTask.dart';
+import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/DailyTaskBigTile.dart';
 
 class DailytasksTab extends ConsumerStatefulWidget {
@@ -32,13 +33,23 @@ final List<Dailytask> testDailyTasks = [
 class _DailytasksTabState extends ConsumerState<DailytasksTab> {
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: testDailyTasks.length,
-      separatorBuilder: (context, index) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0,
-      ),
-      itemBuilder: (context, index) =>
-          Dailytaskbigtile(dailytask: testDailyTasks[index]),
-    );
+    final asyncVal = ref.watch(dailyTasksStateProvider(ref));
+    return asyncVal.when(
+        data: (res) {
+          return res.fold((fail) => Text(fail.errMessage), (tasks) {
+            return ListView.separated(
+              itemCount: tasks.length,
+              separatorBuilder: (context, index) => SizedBox(
+                height: MediaQuery.of(context).size.height * 0,
+              ),
+              itemBuilder: (context, index) =>
+                  Dailytaskbigtile(dailytask: tasks[index]),
+            );
+          });
+        },
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () {
+          return const CircularProgressIndicator();
+        });
   }
 }

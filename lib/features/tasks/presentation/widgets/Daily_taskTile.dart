@@ -70,7 +70,6 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
         ref.refresh(DailyTasksStateProvider(ref));
       },
       child: GestureDetector(
-        
         child: Container(
             padding: const EdgeInsets.all(15),
             decoration: const BoxDecoration(

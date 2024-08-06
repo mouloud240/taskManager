@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_spacing/responsive_spacing.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
 import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
@@ -35,7 +36,7 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
     final remainingTime = widget.model.getdiffernce();
 
     final asyncval = ref.watch(priorityTasksStateProvider(ref));
-    return Scaffold(
+    return ResponsiveScaffold(
       appBar: AppBar(
         leading: widget.model.icon == null
             ? SvgPicture.asset(
