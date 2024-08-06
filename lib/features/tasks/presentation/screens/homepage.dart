@@ -3,14 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager/core/colors.dart';
-import 'package:task_manager/features/auth/presentation/state/userState.dart';
-import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
-import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
+
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
-import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
-import 'package:task_manager/features/tasks/domain/usecases/createNewPriorUsecase.dart';
+import 'package:task_manager/features/tasks/presentation/screens/appbars/calendarPage_appbar.dart';
+
+import 'package:task_manager/features/tasks/presentation/screens/appbars/homepage_appBar.dart';
 import 'package:task_manager/features/tasks/presentation/screens/bottomAppbarpages/calendar.dart';
 import 'package:task_manager/features/tasks/presentation/screens/bottomAppbarpages/home.dart';
 import 'package:task_manager/features/tasks/presentation/screens/bottomAppbarpages/profile.dart';
@@ -32,6 +31,11 @@ class _HomepageState extends ConsumerState<Homepage> {
   }
 
   final pages = [const Home(), const Calendar(), const Profile()];
+  final appbars = [
+    const homePage_appbar(),
+    const CalendarpageAppbar(),
+    const homePage_appbar()
+  ];
   int index = 0;
 
   @override
@@ -53,34 +57,7 @@ class _HomepageState extends ConsumerState<Homepage> {
           },
           child: CustomScrollView(
             slivers: [
-              SliverAppBar(
-                floating: true,
-                scrolledUnderElevation: 0,
-                backgroundColor: Colors.white,
-                automaticallyImplyLeading: false,
-                title: Text(
-                  DateFormat.yMMMEd().format(DateTime.now()),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      color: Appcolors.subHeaderColor),
-                ),
-                actions: [
-                  GestureDetector(
-                    onTap: () async {
-                      print("Notification clickedd");
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      child: SvgPicture.asset(
-                        'lib/core/assets/icons/notification.svg',
-                        width: 22,
-                        height: 22,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              appbars[index],
               SliverToBoxAdapter(
                 child: pages[index],
               )

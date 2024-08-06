@@ -69,31 +69,34 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
         // Refresh the state
         ref.refresh(DailyTasksStateProvider(ref));
       },
-      child: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: const BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey, offset: Offset.zero, blurRadius: 3)
-              ]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.dailyTask.title,
-                style: TextStyle(
-                    color: status ? Appcolors.brandColor : Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20),
-              ),
-              SvgPicture.asset(status
-                  ? "lib/core/assets/icons/checked.svg"
-                  : "lib/core/assets/icons/unchecked.svg")
-            ],
-          )),
+      child: GestureDetector(
+        
+        child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey, offset: Offset.zero, blurRadius: 3)
+                ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.dailyTask.title,
+                  style: TextStyle(
+                      color: status ? Appcolors.brandColor : Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20),
+                ),
+                SvgPicture.asset(status
+                    ? "lib/core/assets/icons/checked.svg"
+                    : "lib/core/assets/icons/unchecked.svg")
+              ],
+            )),
+      ),
     );
   }
 }

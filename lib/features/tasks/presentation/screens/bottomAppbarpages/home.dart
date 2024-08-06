@@ -63,7 +63,7 @@ class _HomeState extends ConsumerState<Home> {
               return res.fold((fail) => Text(fail.errMessage), (tasks) {
                 tasks.sort((a, b) => a.endDate.compareTo(b.endDate));
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.26,
                   child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,

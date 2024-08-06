@@ -33,7 +33,6 @@ class PriorityTasktile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Container(
-            height: MediaQuery.of(context).size.height * 0.24,
             width: MediaQuery.of(context).size.width * 0.344,
             decoration: BoxDecoration(
               boxShadow: const [
@@ -50,6 +49,7 @@ class PriorityTasktile extends StatelessWidget {
               ),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -108,7 +108,7 @@ class PriorityTasktile extends StatelessWidget {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 8  ),
+                        padding: EdgeInsets.only(left: 8),
                         child: Text(
                           "Progress",
                           style: TextStyle(
