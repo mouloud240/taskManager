@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
@@ -9,6 +10,8 @@ import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 import 'package:task_manager/features/tasks/domain/usecases/deletes.dart';
 import 'package:task_manager/features/tasks/presentation/screens/EditDailyTask.dart';
+import 'package:task_manager/features/tasks/presentation/screens/editPriorityTask.dart';
+import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 
 class Priorittaskbigtile extends StatelessWidget {
   final Prioritytask prioritytask;
@@ -18,20 +21,25 @@ class Priorittaskbigtile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 3))
+                spreadRadius: 0.1,
+                blurRadius: 0.1,
+                offset: const Offset(0, 2))
           ],
-          border: const Border(
-              left: BorderSide(color: Color(0xffABCEF5), width: 1.5),
-              right: BorderSide(color: Color(0xffABCEF5), width: 1.5),
-              top: BorderSide(color: Color(0xffABCEF5), width: 1.5),
-              bottom: BorderSide(color: Color(0xffABCEF5), width: 1.5)),
+          border: Border(
+              left: BorderSide(
+                  color: const Color(0xffABCEF5).withOpacity(0.5), width: 1.5),
+              right: BorderSide(
+                  color: const Color(0xffABCEF5).withOpacity(0.5), width: 1.5),
+              top: BorderSide(
+                  color: const Color(0xffABCEF5).withOpacity(0.5), width: 1.5),
+              bottom: BorderSide(
+                  color: const Color(0xffABCEF5).withOpacity(0.5), width: 1.5)),
           borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,6 +81,26 @@ class Priorittaskbigtile extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              prioritytask.description,
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "${DateFormat.MMMd().format(prioritytask.startDate)} - ${DateFormat.MMMd().format(prioritytask.endDate)}",
+                style: const TextStyle(
+                    fontSize: 13,
+                    color: Appcolors.brandColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -109,7 +137,11 @@ class editDialog extends ConsumerWidget {
                     ),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          Editprioritytask(prioritytask: task)));
+                },
                 child: const Text(
                   "Edit",
                   style: TextStyle(
@@ -134,11 +166,14 @@ class editDialog extends ConsumerWidget {
                   ),
                 ),
                 onPressed: () {
-                  //todo Uncomment this line
-                  // DeletePriorityTaskUsecase(taskmanagementRepository).call(task);
+                  DeletePriorityTaskUsecase(taskmanagementRepository)
+                      .call(task);
+
                   showDialog(
                       context: context,
                       builder: (context) => const deletedDialog());
+                  ref.invalidate(priorityTasksStateProvider);
+                  ref.refresh(priorityTasksStateProvider(ref));
                 },
                 child: const Text(
                   "Delete",

@@ -114,7 +114,9 @@ class Prioritytaskmodel extends Prioritytask
   Prioritytask toEntity() {
     return Prioritytask(
       icon: icon,
-      miniTasksList: miniTasksList,
+      miniTasksList: miniTasks.map((key, value) {
+        return MapEntry(key, value.toEntity());
+      }),
       title: title,
       description: description,
       startDate: startDate,

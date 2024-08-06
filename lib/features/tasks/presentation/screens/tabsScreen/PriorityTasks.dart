@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
+import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/PrioritTaskBigTile.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/Priority_taskTile.dart';
 
@@ -28,11 +29,21 @@ final List<Prioritytask> _prioritTasksTest = [
 class _PrioritytasksTabState extends ConsumerState<PrioritytasksTab> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: _prioritTasksTest.length,
-        itemBuilder: (context, index) {
-          return Priorittaskbigtile(prioritytask: _prioritTasksTest[index]);
-        });
+    final asyncVal = ref.watch(priorityTasksStateProvider(ref));
+    return asyncVal.when(
+        data: (res) {
+          return res.fold((fail) => Text(fail.errMessage), (tasks) {
+            return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(8),
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return Priorittaskbigtile(prioritytask: tasks[index]);
+                });
+          });
+        },
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const SizedBox(
+            width: 40, height: 40, child: CircularProgressIndicator()));
   }
 }

@@ -49,21 +49,19 @@ class _HomepageState extends ConsumerState<Homepage> {
     return ResponsiveScaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(dailyTasksStateProvider);
-            ref.invalidate(priorityTasksStateProvider);
-            return await ref.refresh(priorityTasksStateProvider(ref).future);
-          },
-          child: CustomScrollView(
-            slivers: [
-              appbars[index],
-              SliverToBoxAdapter(
-                child: pages[index],
-              )
-            ],
-          ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(dailyTasksStateProvider);
+          ref.invalidate(priorityTasksStateProvider);
+          return await ref.refresh(priorityTasksStateProvider(ref).future);
+        },
+        child: CustomScrollView(
+          slivers: [
+            appbars[index],
+            SliverToBoxAdapter(
+              child: pages[index],
+            )
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
