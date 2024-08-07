@@ -50,6 +50,8 @@ class _HomepageState extends ConsumerState<Homepage> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: RefreshIndicator(
+        color: Appcolors.brandColor,
+        backgroundColor: Colors.white,
         onRefresh: () async {
           ref.invalidate(dailyTasksStateProvider);
           ref.invalidate(priorityTasksStateProvider);

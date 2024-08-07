@@ -806,16 +806,26 @@ class _CreatenewtaskState extends ConsumerState<Createnewtask> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      miniTasks.values
-                                                          .elementAt(index)
-                                                          .name,
-                                                      style: const TextStyle(
-                                                          color: Appcolors
-                                                              .textColor,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.5,
+                                                      child: Text(
+                                                        overflow:
+                                                            TextOverflow.clip,
+                                                        miniTasks.values
+                                                            .elementAt(index)
+                                                            .name,
+                                                        style: const TextStyle(
+                                                            color: Appcolors
+                                                                .textColor,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
                                                     ),
                                                     IconButton(
                                                       onPressed: () {

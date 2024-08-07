@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:dartz/dartz.dart' as prefix;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_spacing/responsive_spacing.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
 import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
@@ -29,8 +30,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth(ref:ref));
-    return Scaffold(
+    final userAuthRepo = UserAuthRepositoryImplementation(RemoteAuth(ref: ref));
+    return ResponsiveScaffold(
       backgroundColor: Colors.white,
       body: SizedBox.expand(
         child: Form(
@@ -76,18 +77,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     },
                     controller: emailController,
                     decoration: InputDecoration(
-                      hintText: "Email  ",
-                      prefixIcon: Container(
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0),
+                      hintText: "Email",
+                      prefix: const SizedBox(
+                        width: 10,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 3.0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.065,
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: const BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                            ),
                           ),
+                          child: const Icon(Icons.email, color: Colors.white),
                         ),
-                        child: const Icon(Icons.email, color: Colors.white),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.blue),
@@ -115,10 +122,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       } else if (!passRegex.hasMatch(value)) {
                         return "password must have at least 1 uppercase and lowercase";
                       }
+                      return null;
                     },
                     controller: passwordController,
                     obscureText: passwordVisible,
                     decoration: InputDecoration(
+                      prefix: const SizedBox(
+                        width: 10,
+                      ),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -163,7 +174,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(
+                        return const AlertDialog(
                           content: Forgotpassword(),
                         );
                       });
@@ -206,7 +217,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         }
                       } else {
                         ref.refresh(userStateProvider);
-                        Future.delayed(Duration(microseconds: 1000), () {
+                        Future.delayed(const Duration(microseconds: 1000), () {
                           Navigator.of(context).pushNamed('home');
                         });
                       }

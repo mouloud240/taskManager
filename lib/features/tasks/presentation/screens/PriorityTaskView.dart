@@ -77,6 +77,8 @@ class _PrioritytaskviewState extends ConsumerState<Prioritytaskview> {
         ],
       ),
       body: RefreshIndicator(
+        color: Appcolors.brandColor,
+        backgroundColor: Colors.white,
         onRefresh: () async {
           ref.invalidate(priorityTasksStateProvider(ref));
         },

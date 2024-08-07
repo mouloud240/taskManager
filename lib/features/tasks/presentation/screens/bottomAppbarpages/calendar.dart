@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/colors.dart';
@@ -39,42 +40,42 @@ class _CalendarState extends ConsumerState<Calendar>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Column(
-          children: [
-            TabBar(
-                controller: _tabController,
-                splashFactory: NoSplash.splashFactory,
-                dividerColor: Colors.transparent,
-                indicatorPadding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.08),
-                indicatorColor: Appcolors.brandColor,
-                labelStyle: const TextStyle(
-                    color: Appcolors.brandColor,
-                    fontFamily: "Sofia pro",
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700),
-                tabs: const [
-                  Tab(
-                    text: "Priority Task",
-                  ),
-                  Tab(
-                    text: "Daily Task",
-                  ),
-                ]),
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _animation,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    child:
-                        TabBarView(controller: _tabController, children: _tabs),
-                  ),
-                );
-              },
-            )
-          ],
+        TabBar(
+            controller: _tabController,
+            splashFactory: NoSplash.splashFactory,
+            dividerColor: Colors.transparent,
+            indicatorPadding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.08),
+            indicatorColor: Appcolors.brandColor,
+            labelStyle: const TextStyle(
+                color: Appcolors.brandColor,
+                fontFamily: "Sofia pro",
+                fontSize: 17,
+                fontWeight: FontWeight.w700),
+            tabs: const [
+              Tab(
+                text: "Priority Task",
+              ),
+              Tab(
+                text: "Daily Task",
+              ),
+            ]),
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return SizedBox(
+              //todo Fix this
+              height: double.maxFinite,
+              child: FadeTransition(
+                opacity: _animation,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child:
+                      TabBarView(controller: _tabController, children: _tabs),
+                ),
+              ),
+            );
+          },
         )
       ],
     );

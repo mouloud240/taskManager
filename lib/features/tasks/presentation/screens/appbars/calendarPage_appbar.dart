@@ -19,6 +19,7 @@ class _CalendarpageAppbarState extends ConsumerState<CalendarpageAppbar> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      pinned: false,
       leadingWidth: MediaQuery.of(context).size.width * 0.4,
       toolbarHeight: 140,
       leading: Padding(

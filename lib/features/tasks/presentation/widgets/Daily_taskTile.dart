@@ -83,12 +83,16 @@ class _DailyTasktileState extends ConsumerState<DailyTasktile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.dailyTask.title,
-                  style: TextStyle(
-                      color: status ? Appcolors.brandColor : Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Text(
+                    widget.dailyTask.title,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                        color: status ? Appcolors.brandColor : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20),
+                  ),
                 ),
                 SvgPicture.asset(status
                     ? "lib/core/assets/icons/checked.svg"

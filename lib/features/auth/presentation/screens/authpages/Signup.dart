@@ -255,6 +255,9 @@ class textField extends StatelessWidget {
               hintText: hintText,
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
               suffixIcon: suffixIcon,
+              prefix: const SizedBox(
+                width: 10,
+              ),
               prefixIcon: Container(
                 height: MediaQuery.of(context).size.height * 0.065,
                 padding: const EdgeInsets.all(12.0),

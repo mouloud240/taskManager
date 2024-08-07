@@ -54,8 +54,6 @@ class _MiniTasktileState extends ConsumerState<MiniTasktile> {
             ));
         ref.invalidate(dailyTasksStateProvider);
         ref.invalidate(priorityTasksStateProvider);
-
-        print("Updated task status in Firebase");
         return ref.refresh(priorityTasksStateProvider(ref));
       },
       child: Container(
@@ -71,12 +69,16 @@ class _MiniTasktileState extends ConsumerState<MiniTasktile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.minitask.name,
-                style: TextStyle(
-                    color: status ? Appcolors.brandColor : Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text(
+                  overflow: TextOverflow.clip,
+                  widget.minitask.name,
+                  style: TextStyle(
+                      color: status ? Appcolors.brandColor : Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20),
+                ),
               ),
               SvgPicture.asset(status
                   ? "lib/core/assets/icons/checked.svg"
