@@ -8,6 +8,7 @@ import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
 import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
 import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
+import 'package:task_manager/features/tasks/presentation/screens/appbars/ProfilePage_appbar.dart';
 import 'package:task_manager/features/tasks/presentation/screens/appbars/calendarPage_appbar.dart';
 
 import 'package:task_manager/features/tasks/presentation/screens/appbars/homepage_appBar.dart';
@@ -32,10 +33,10 @@ class _HomepageState extends ConsumerState<Homepage> {
   }
 
   final pages = [const Home(), const Calendar(), const Profile()];
-  final appbars = [
+  final _appbars = [
     const homePage_appbar(),
     const CalendarpageAppbar(),
-    const homePage_appbar()
+    const ProfilepageAppbar()
   ];
   int index = 0;
 
@@ -59,7 +60,7 @@ class _HomepageState extends ConsumerState<Homepage> {
         },
         child: CustomScrollView(
           slivers: [
-            appbars[index],
+            _appbars[index],
             SliverToBoxAdapter(
               child: pages[index],
             )

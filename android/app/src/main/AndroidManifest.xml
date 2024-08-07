@@ -7,7 +7,7 @@ package="com.example.task_manager"
     <application
         android:label="task_manager"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <activity
             android:name=".MainActivity"
