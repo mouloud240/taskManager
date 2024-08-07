@@ -7,7 +7,7 @@ part of 'TasksState.dart';
 // **************************************************************************
 
 String _$priorityTasksStateHash() =>
-    r'2ec481352f3fa96d1e70192fbf053f7d62ea942e';
+    r'658807381d649a421d26f9da064b92430338f573';
 
 /// Copied from Dart SDK
 class _SystemHash {

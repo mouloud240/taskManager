@@ -25,7 +25,7 @@ class PrioritytaskmodelAdapter extends TypeAdapter<Prioritytaskmodel> {
       miniTasks: (fields[4] as Map).cast<String, Minitaskmodel>(),
       id: fields[6] as String,
       color: fields[8] as Color?,
-      status: fields[7],
+      status: fields[7] as bool,
     );
   }
 

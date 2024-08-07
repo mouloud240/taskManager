@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
+import 'package:task_manager/features/tasks/presentation/state/calendarstartDate.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/PrioritTaskBigTile.dart';
 
 class PrioritytasksTab extends ConsumerStatefulWidget {
@@ -14,10 +15,17 @@ class PrioritytasksTab extends ConsumerStatefulWidget {
 class _PrioritytasksTabState extends ConsumerState<PrioritytasksTab> {
   @override
   Widget build(BuildContext context) {
+    final filter = ref.watch(filterStateProvider);
     final asyncVal = ref.watch(priorityTasksStateProvider(ref));
+    final finalDate = ref.watch(calendarStartdateProvider);
     return asyncVal.when(
         data: (res) {
           return res.fold((fail) => Text(fail.errMessage), (tasks) {
+            if (filter) {
+              tasks = tasks
+                  .where((element) => element.endDate.compareTo(finalDate) < 0)
+                  .toList();
+            }
             return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
