@@ -35,7 +35,7 @@ class _HomeState extends ConsumerState<Home> {
                 if (data == null) {
                   return const Text("No user 404 Error");
                 }
-                String name = getFirstWord(data.username);
+                String name = getFirstWord(data .username);
 
                 return Text(
                   "Welcome $name",

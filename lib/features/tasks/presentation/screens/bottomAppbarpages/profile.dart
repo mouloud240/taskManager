@@ -18,10 +18,23 @@ class _ProfileState extends ConsumerState<Profile> {
     return Column(
       children: [
         ElevatedButton(
-            onPressed: () {
-              LogoutUsecase(
+            onPressed: () async {
+              final res = await LogoutUsecase(
                       UserAuthRepositoryImplementation(RemoteAuth(ref: ref)))
                   .call();
+
+              res.fold((fail) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    fail.errMessage,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Appcolors.brandColor,
+                ));
+              }, (_) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "login", (route) => false);
+              });
             },
             child: const Icon(
               Icons.logout,
