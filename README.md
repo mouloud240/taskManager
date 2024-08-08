@@ -15,6 +15,23 @@ TaskWan is a feature-rich task management app built using Flutter, Firebase, and
 - **Responsive UI**: Optimized for both mobile and tablet views.
 
 ## Screenshots
+### Welcome Screens
+![Welcome Screen 1](./screenshot_1723_142901.png)
+![Welcome Screen 2](./screenshot_1723_142908.png)
+
+### Authentication Screens
+![Login Screen](./screenshot_1723_142910.png)
+![Register Screen](./screenshot_1723_142914.png)
+
+### Task Management Screens
+![Task List](./screenshot_1723_142968.png)
+![Task Details](./screenshot_1723_143079.png)
+
+### Additional Screens
+![Screen 1](./screenshot_1723_142973.png)
+![Screen 2](./screenshot_1723_142976.png)
+![Screen 3](./screenshot_1723_142983.png)
+
 
 
 ## Installation
