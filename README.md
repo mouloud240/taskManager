@@ -56,14 +56,14 @@ TaskWan is a feature-rich task management app built using Flutter, Firebase, and
 
 ## Technologies Used
 
-- **Flutter**: For building the user interface.
+- **Flutter**: This is used to build the user interface.
 - **Firebase**: For user authentication and cloud storage.
 - **Hive**: For local data storage.
 - **Riverpod**: For state management.
 
 ## Contribution
 
-Feel free to open issues and submit pull requests for any features or improvements you’d like to see.
+Feel free to open issues and submit pull requests for any features or improvements you want.
 
 ## License
 
@@ -71,7 +71,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For any inquiries, you can reach me at mouloud240@gmail.com.
+If you have any questions, feel free to reach me at mouloudhasrane24@gmail.com.
 
 ---
 
