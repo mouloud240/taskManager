@@ -59,6 +59,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Spacer(),
               const Text(
                 "TASK-WAN",
                 style: TextStyle(
@@ -161,6 +162,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   },
                 ),
               ),
+              const Spacer(),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.075,

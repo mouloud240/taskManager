@@ -35,7 +35,6 @@ class _HomeState extends ConsumerState<Home> {
                 if (data == null) {
                   return const Text("No user 404 Error");
                 }
-                print(data.userTojson());
                 String name = getFirstWord(data.username);
 
                 return Text(
