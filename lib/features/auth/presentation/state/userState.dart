@@ -34,6 +34,7 @@ class userState extends _$userState {
       }
     } else {
       final user = await local.getCurrentUser();
+      print("riverPod user ${user.userTojson()} ");
       return user.toEntity();
     }
   }

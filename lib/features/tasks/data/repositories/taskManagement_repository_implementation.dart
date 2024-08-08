@@ -128,6 +128,7 @@ class TaskmanagementRepositoryImplementation
         List<Dailytask> tasks = [];
         dailys.forEach((key, value) {
           tasks.add(Dailtaskmodel.fromJson(value).toEntity());
+          localDataSource.createNewDailyTask(Dailtaskmodel.fromJson(value));
         });
         return right(tasks);
       });
@@ -145,8 +146,10 @@ class TaskmanagementRepositoryImplementation
           await remoteDataSource.getPriorityTasks_remote();
       final Either<Failure, List<Prioritytask>> out =
           res.fold((fail) => left(fail), (pTask) {
-        pTask.forEach((key, value) {
+        pTask.forEach((key, value) async {
           tasks.add(Prioritytaskmodel.fromJson(value).toEntity());
+          await localDataSource
+              .createNewPriorityTask(Prioritytaskmodel.fromJson(value));
         });
         return Right(tasks);
       });

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,12 +26,26 @@ class RemoteAuth {
 
   Future<Either<Failure, bool>> login(String email, String password) async {
     try {
+      UserModel user = UserModel(email: email, password: password);
       await fireauth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      ref.refresh(userStateProvider);
-      local.storeCurrentUser(getUserState());
+      DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (doc.data() != null) {
+        user = UserModel(
+            password: doc.data()!["password"],
+            email: doc.data()!["email"],
+            username: doc.data()!["username"],
+            uid: FirebaseAuth.instance.currentUser!.uid);
+      }
+      local.storeCurrentUser(user);
+
       return const Right(true); // Login successful
     } on FirebaseAuthException catch (e) {
       // Handle specific FirebaseAuth errors here
@@ -55,7 +70,7 @@ class RemoteAuth {
       ref.refresh(userStateProvider);
       local.storeCurrentUser(getUserState());
 
-      return right(Void);
+      return right(unit);
     } on FirebaseAuthException catch (e) {
       return left(Failure(errMessage: e.code));
     }
@@ -74,7 +89,7 @@ class RemoteAuth {
   Future<Either<Failure, void>> resetPassword(String email) async {
     try {
       await fireauth.sendPasswordResetEmail(email: email);
-      return right(Void);
+      return right(Unit);
     } on FirebaseAuthException catch (e) {
       return left(Failure(errMessage: e.code));
     }

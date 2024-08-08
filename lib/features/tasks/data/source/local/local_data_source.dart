@@ -9,7 +9,7 @@ import 'package:task_manager/features/tasks/domain/entities/miniTask.dart';
 import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 
 class LocalDataSource {
-  final Box prioBox = Hive.box("NewPriorityTasks");
+  final Box prioBox = Hive.box<Prioritytask>("NewPriorityTasks");
   final Box dailyBox = Hive.box<Dailytask>("MyDailyTasks");
   //create
   Future<Either<Failure, void>> createNewDailyTask(

@@ -32,7 +32,12 @@ class _HomeState extends ConsumerState<Home> {
                   return words.isNotEmpty ? words[0] : '';
                 }
 
-                String name = getFirstWord(data!.username);
+                if (data == null) {
+                  return const Text("No user 404 Error");
+                }
+                print(data.userTojson());
+                String name = getFirstWord(data.username);
+
                 return Text(
                   "Welcome $name",
                   style: const TextStyle(
@@ -63,7 +68,7 @@ class _HomeState extends ConsumerState<Home> {
               return res.fold((fail) => Text(fail.errMessage), (tasks) {
                 tasks.sort((a, b) => a.endDate.compareTo(b.endDate));
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.26,
+                  height: MediaQuery.of(context).size.height * 0.272,
                   child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,

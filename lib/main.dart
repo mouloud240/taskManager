@@ -17,6 +17,7 @@ import 'package:task_manager/features/tasks/data/models/MiniTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/PriorityTaskModel.dart';
 import 'package:task_manager/features/tasks/data/models/colorAdapter.dart';
 import 'package:task_manager/features/tasks/domain/entities/dailyTask.dart';
+import 'package:task_manager/features/tasks/domain/entities/priorityTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/CreatenewTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/EditDailyTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
@@ -33,7 +34,7 @@ void main() async {
   Hive.registerAdapter(DailtaskmodelAdapter());
 
   final userBox = await Hive.openBox("User");
-  final priotasksBox = await Hive.openBox("NewPriorityTasks");
+  final priotasksBox = await Hive.openBox<Prioritytask>("NewPriorityTasks");
   final dailytasksbox = await Hive.openBox<Dailytask>("MyDailyTasks");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -59,7 +60,6 @@ class MyApp extends StatelessWidget {
           'home': (context) => const Homepage(),
           "signUp": (context) => const SignupPage(),
           "create": (context) => const Createnewtask(),
-
         },
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),

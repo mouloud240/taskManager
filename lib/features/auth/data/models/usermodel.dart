@@ -8,13 +8,17 @@ part 'usermodel.g.dart';
 
 @HiveType(typeId: 0)
 class UserModel extends User with HiveObjectMixin {
+  @override
   @HiveField(0)
   final String? uid;
+  @override
   @HiveField(1)
   final String password;
 
+  @override
   @HiveField(2)
   final String? username;
+  @override
   @HiveField(3)
   final String email;
 
@@ -36,6 +40,6 @@ class UserModel extends User with HiveObjectMixin {
         username: user.username);
   }
   User toEntity() {
-    return User(password: password, email: email, uid: uid, username: uid);
+    return User(password: password, email: email, uid: uid, username: username);
   }
 }
