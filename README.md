@@ -1,6 +1,4 @@
-Here's a draft README for the TaskWan app:
 
----
 
 # TaskWan
 
