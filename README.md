@@ -3,6 +3,7 @@
 # TaskWan
 
 TaskWan is a feature-rich task management app built using Flutter, Firebase, and Hive. It allows users to manage their daily and priority tasks efficiently with a clean and intuitive interface.
+(A link to a demo live is coming soon)
 
 ## Features
 
