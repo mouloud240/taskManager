@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_manager/core/colors.dart';
@@ -17,7 +22,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late TextEditingController proffesionController;
   late TextEditingController emailController;
   late CalendarFormat _calendarFormat;
-  DateTime dob = DateTime.now();
+  final ImagePicker _imagePicker = ImagePicker();
+  final RegExp mailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  late DateTime dob;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -32,6 +40,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userval = ref.watch(userStateProvider);
+    final fireAuth = FirebaseAuth.instance;
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -70,6 +79,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     color: Appcolors.brandColor,
                   ),
                   child: Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
                       padding: const EdgeInsets.all(15),
                       width: MediaQuery.of(context).size.width,
                       decoration: const BoxDecoration(
@@ -90,173 +100,286 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           });
                           return Form(
                               key: formKey,
-                              child: Column(children: [
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.blue,
-                                    radius: 50,
-                                    backgroundImage: user!.userPfp == null
-                                        ? const AssetImage(
-                                            'lib/core/assets/images/default_profile.png')
-                                        : NetworkImage(user.userPfp!),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "name",
-                                    style: TextStyle(
-                                        color: Appcolors.brandColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: TextFormField(
-                                    validator: (val) {
-                                      if (val!.isEmpty) {
-                                        return "Name cannot be empty";
-                                      }
-                                      return null;
-                                    },
-                                    controller: nameController,
-                                    decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(15),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: const Color(0xff006EE9)
-                                              .withOpacity(0.06),
-                                        ),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final selectedImage =
+                                            await _imagePicker.pickImage(
+                                                source: ImageSource.gallery);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.blue,
+                                        radius: 50,
+                                        backgroundImage: user!.userPfp == null
+                                            ? const AssetImage(
+                                                'lib/core/assets/images/default_profile.png')
+                                            : NetworkImage(user.userPfp!),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(
-                                            color: const Color(0xff006EE9)
-                                                .withOpacity(0.06),
-                                            width: 2),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: const Color(0xff006EE9)
-                                              .withOpacity(0.06),
-                                        ),
-                                      ),
-                                      border: const OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      hintText: "Name",
-                                      hintStyle: const TextStyle(
-                                          color: Appcolors.subHeaderColor),
                                     ),
-                                  ),
-                                ),
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Proffesion",
-                                    style: TextStyle(
-                                        color: Appcolors.brandColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: TextFormField(
-                                    controller: proffesionController,
-                                    decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(15),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: const Color(0xff006EE9)
-                                              .withOpacity(0.06),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(
-                                            color: const Color(0xff006EE9)
-                                                .withOpacity(0.06),
-                                            width: 2),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: const Color(0xff006EE9)
-                                              .withOpacity(0.06),
-                                        ),
-                                      ),
-                                      border: const OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      hintText: "Proffesion ..",
-                                      hintStyle:
-                                          const TextStyle(color: Colors.grey),
+                                    const SizedBox(
+                                      height: 10,
                                     ),
-                                  ),
-                                ),
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Date of birth",
-                                    style: TextStyle(
-                                        color: Appcolors.brandColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return calendarDialog(context);
-                                        });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "name",
+                                        style: TextStyle(
+                                            color: Appcolors.brandColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Padding(
                                       padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
+                                      child: TextFormField(
+                                        validator: (val) {
+                                          if (val!.isEmpty) {
+                                            return "Name cannot be empty";
+                                          }
+                                          return null;
+                                        },
+                                        controller: nameController,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(15),
+                                            ),
+                                            borderSide: BorderSide(
                                               color: const Color(0xff006EE9)
-                                                  .withOpacity(0.06)),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.calendar_today,
-                                              color: Appcolors.brandColor,
+                                                  .withOpacity(0.06),
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: BorderSide(
+                                                color: const Color(0xff006EE9)
+                                                    .withOpacity(0.06),
+                                                width: 2),
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color(0xff006EE9)
+                                                  .withOpacity(0.06),
                                             ),
-                                            Text(
-                                              DateFormat('MMM-dd-yyyy')
-                                                  .format(dob),
-                                              style: const TextStyle(
-                                                  color: Appcolors.textColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          ],
+                                          ),
+                                          border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          hintText: "Name",
+                                          hintStyle: const TextStyle(
+                                              color: Appcolors.subHeaderColor),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ]));
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Proffesion",
+                                        style: TextStyle(
+                                            color: Appcolors.brandColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: TextFormField(
+                                        controller: proffesionController,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(15),
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: const Color(0xff006EE9)
+                                                  .withOpacity(0.06),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: BorderSide(
+                                                color: const Color(0xff006EE9)
+                                                    .withOpacity(0.06),
+                                                width: 2),
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color(0xff006EE9)
+                                                  .withOpacity(0.06),
+                                            ),
+                                          ),
+                                          border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          hintText: "Proffesion ..",
+                                          hintStyle: const TextStyle(
+                                              color: Colors.grey),
+                                        ),
+                                      ),
+                                    ),
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Date of birth",
+                                        style: TextStyle(
+                                            color: Appcolors.brandColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return calendarDialog(context);
+                                            });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: const Color(0xff006EE9)
+                                                      .withOpacity(0.06)),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.calendar_today,
+                                                  color: Appcolors.brandColor,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  DateFormat('MMM-dd-yyyy')
+                                                      .format(dob),
+                                                  style: const TextStyle(
+                                                      color:
+                                                          Appcolors.textColor,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "email",
+                                        style: TextStyle(
+                                            color: Appcolors.brandColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: TextFormField(
+                                        validator: (val) {
+                                          if (val == null) {
+                                            return "Email cannot be Empty";
+                                          }
+                                          if (!mailRegex.hasMatch(val)) {
+                                            return "Email not valid";
+                                          }
+
+                                          return null;
+                                        },
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(15),
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: const Color(0xff006EE9)
+                                                  .withOpacity(0.06),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: BorderSide(
+                                                color: const Color(0xff006EE9)
+                                                    .withOpacity(0.06),
+                                                width: 2),
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color(0xff006EE9)
+                                                  .withOpacity(0.06),
+                                            ),
+                                          ),
+                                          border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          hintText: "Email",
+                                          hintStyle: const TextStyle(
+                                              color: Appcolors.subHeaderColor),
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    ElevatedButton(
+                                        style: ButtonStyle(
+                                            fixedSize: WidgetStateProperty.all(Size(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.9,
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.06)),
+                                            backgroundColor:
+                                                WidgetStateProperty.all(
+                                                    Appcolors.brandColor
+                                                        .withOpacity(0.9)),
+                                            shape: WidgetStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(15)))),
+                                        onPressed: () async {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                "Feature Coming Soon",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              backgroundColor: Colors.red,
+                                            ));
+                                          }
+                                        },
+                                        child: const Text(
+                                          "Save",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500),
+                                        ))
+                                  ]));
                         },
                         error: (err, stk) => const Text(
                           "Error",
@@ -312,6 +435,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         setState(() {
                                           dob = DateTime.utc(
                                               year.year, dob.month, dob.day);
+                                          Navigator.of(context).pop();
                                         });
                                       }),
                                 ),
@@ -319,7 +443,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                           ));
                 },
-                calendarFormat: _calendarFormat,
                 headerStyle: const HeaderStyle(
                     leftChevronIcon: Icon(
                       Icons.arrow_left_sharp,
@@ -331,6 +454,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       color: Appcolors.brandColor,
                       size: 40,
                     ),
+                    titleCentered: true,
                     formatButtonVisible: true,
                     formatButtonTextStyle: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w500),
@@ -342,11 +466,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.w600)),
                 focusedDay: dob,
-                firstDay: DateTime.utc(2010, 01, 01),
+                firstDay: DateTime.utc(1900, 01, 01),
                 lastDay: DateTime.utc(2030, 12, 12),
                 onDaySelected: (selectedDay, focusDay) {
                   setState(() {
                     dob = selectedDay;
+
                     focusDay = selectedDay;
                   });
                   Navigator.pop(context);

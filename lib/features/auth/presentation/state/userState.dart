@@ -6,6 +6,7 @@ import 'package:task_manager/core/connection/network_info.dart';
 import 'package:task_manager/features/auth/data/source/local/local_user.dart';
 import 'package:task_manager/features/auth/domain/entities/user.dart'
     as TaskManagerUser;
+import 'package:task_manager/features/tasks/data/models/DailTaskModel.dart';
 part 'userState.g.dart';
 
 @riverpod
@@ -23,15 +24,16 @@ class userState extends _$userState {
 
       if (doc.data() != null) {
         final user = TaskManagerUser.User(
-            password: doc.data()!["password"],
-            email: doc.data()!["email"],
-            username: doc.data()!["username"],
-            uid: FirebaseAuth.instance.currentUser!.uid,
-            userPfp: doc.data()!["userPfp"],
-            profession: doc.data()!["profession"],
-            dob: doc.data()!["dob"]
-            
-            );
+          password: doc.data()!["password"],
+          email: doc.data()!["email"],
+          username: doc.data()!["username"],
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          userPfp: doc.data()!["userPfp"],
+          profession: doc.data()!["profession"],
+          dob: doc.data()!['bod'] != null
+              ? dateFormat.parse(doc.data()!['bod'].replaceAll(" UTC+1", ""))
+              : null,
+        );
         return user;
       } else {
         return TaskManagerUser.User(
