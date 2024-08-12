@@ -26,7 +26,12 @@ class userState extends _$userState {
             password: doc.data()!["password"],
             email: doc.data()!["email"],
             username: doc.data()!["username"],
-            uid: FirebaseAuth.instance.currentUser!.uid);
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            userPfp: doc.data()!["userPfp"],
+            profession: doc.data()!["profession"],
+            dob: doc.data()!["dob"]
+            
+            );
         return user;
       } else {
         return TaskManagerUser.User(

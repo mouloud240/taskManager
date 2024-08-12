@@ -26,6 +26,7 @@ class _ProfilepageAppbarState extends State<ProfilepageAppbar> {
           ),
         ),
       ),
+      automaticallyImplyLeading: false,
       backgroundColor: Appcolors.brandColor,
       toolbarHeight: MediaQuery.of(context).size.height * 0.15,
     );

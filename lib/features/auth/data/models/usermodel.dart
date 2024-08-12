@@ -23,7 +23,7 @@ class UserModel extends User with HiveObjectMixin {
   final String email;
 
   @HiveField(4)
-  final File? image;
+  final String? image;
   UserModel({
     this.uid,
     required this.email,

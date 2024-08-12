@@ -39,6 +39,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Spacer(
+                flex: 3,
+              ),
               const Text(
                 "TASK-WAN",
                 style: TextStyle(
@@ -59,7 +62,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 "Login to your account",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               ),
-              const SizedBox(height: 10),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SizedBox(
@@ -184,6 +187,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
               ),
+              const Spacer(),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.075,
@@ -247,6 +251,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ],
               ),
+              const Spacer(
+                flex: 3,
+              )
             ],
           ),
         ),

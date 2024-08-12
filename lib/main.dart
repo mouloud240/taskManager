@@ -22,6 +22,8 @@ import 'package:task_manager/features/tasks/presentation/screens/CreatenewTask.d
 import 'package:task_manager/features/tasks/presentation/screens/EditDailyTask.dart';
 import 'package:task_manager/features/tasks/presentation/screens/PriorityTaskView.dart';
 import 'package:task_manager/features/tasks/presentation/screens/homepage.dart';
+import 'package:task_manager/features/tasks/presentation/screens/profilePages/comingSoon.dart';
+import 'package:task_manager/features/tasks/presentation/screens/profilePages/profile_page.dart';
 import 'package:task_manager/firebase_options.dart';
 
 void main() async {
@@ -60,6 +62,8 @@ class MyApp extends StatelessWidget {
           'home': (context) => const Homepage(),
           "signUp": (context) => const SignupPage(),
           "create": (context) => const Createnewtask(),
+          "soon": (context) => const Comingsoon(),
+          "editProfile": (context) => const ProfilePage(),
         },
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),

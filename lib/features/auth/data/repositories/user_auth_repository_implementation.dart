@@ -11,7 +11,7 @@ import 'package:task_manager/features/auth/domain/repositories/user_auth_reposit
 class UserAuthRepositoryImplementation implements UserAuthRepository {
   RemoteAuth remoteAuth;
 
-  UserAuthRepositoryImplementation(this.remoteAuth);
+  UserAuthRepositoryImplementation(  this.remoteAuth);
   @override
   Future<Either<Failure, void>> changePassword(String password) async {
     // ignore: void_checks
