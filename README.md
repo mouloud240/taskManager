@@ -1,10 +1,9 @@
-Here's a draft README for the TaskWan app:
 
----
 
 # TaskWan
 
 TaskWan is a feature-rich task management app built using Flutter, Firebase, and Hive. It allows users to manage their daily and priority tasks efficiently with a clean and intuitive interface.
+(A link to a demo live is coming soon)
 
 ## Features
 
@@ -15,6 +14,26 @@ TaskWan is a feature-rich task management app built using Flutter, Firebase, and
 - **Responsive UI**: Optimized for both mobile and tablet views.
 
 ## Screenshots
+### Welcome Screens
+![Welcome Screen 1](screenshots/Screenshot_1723142901.png)
+![Welcome Screen 2](screenshots/Screenshot_1723142908.png)
+![Welcome Screen 3](screenshots/Screenshot_1723142910.png)
+
+
+### Authentication Screens
+![Login Screen](screenshots/Screenshot_1723142914.png)
+![Register Screen](screenshots/Screenshot_1723142916.png)
+
+
+### Task Management Screens
+![Task List](screenshots/Screenshot_1723142968.png)
+![Task Details](screenshots/Screenshot_1723143079.png)
+
+### Additional Screens
+![Screen 1](screenshots/Screenshot_1723142973.png)
+![Screen 2](screenshots/Screenshot_1723142976.png)
+![Screen 3](screenshots/Screenshot_1723142983.png)
+
 
 
 ## Installation
@@ -39,23 +58,20 @@ TaskWan is a feature-rich task management app built using Flutter, Firebase, and
 
 ## Technologies Used
 
-- **Flutter**: For building the user interface.
+- **Flutter**: This is used to build the user interface.
 - **Firebase**: For user authentication and cloud storage.
 - **Hive**: For local data storage.
 - **Riverpod**: For state management.
 
 ## Contribution
 
-Feel free to open issues and submit pull requests for any features or improvements you’d like to see.
+Feel free to open issues and submit pull requests for any features or improvements you want.
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
-For any inquiries, you can reach me at mouloud240@gmail.com.
+If you have any questions, feel free to reach me at mouloudhasrane24@gmail.com.
 
 ---
 
-Make sure to add screenshots of your app, and update any links as needed!
