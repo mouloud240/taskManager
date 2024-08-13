@@ -116,9 +116,9 @@ class _ProfileState extends ConsumerState<Profile> {
                     const SizedBox(
                       height: 5,
                     ),
-                    const Text(
-                      "Cool guy",
-                      style: TextStyle(
+                    Text(
+                      currUser.profession ?? "cool guy",
+                      style: const TextStyle(
                           color: Appcolors.subHeaderColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w500),

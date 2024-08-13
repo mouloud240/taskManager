@@ -21,7 +21,6 @@ class userState extends _$userState {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-
       if (doc.data() != null) {
         final user = TaskManagerUser.User(
           password: doc.data()!["password"],
@@ -29,7 +28,7 @@ class userState extends _$userState {
           username: doc.data()!["username"],
           uid: FirebaseAuth.instance.currentUser!.uid,
           userPfp: doc.data()!["userPfp"],
-          profession: doc.data()!["profession"],
+          profession: doc.data()!["proffesion"],
           dob: doc.data()!['bod'] != null
               ? dateFormat.parse(doc.data()!['bod'].replaceAll(" UTC+1", ""))
               : null,

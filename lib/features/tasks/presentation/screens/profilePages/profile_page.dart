@@ -8,6 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_manager/core/colors.dart';
+import 'package:task_manager/features/auth/data/repositories/user_auth_repository_implementation.dart';
+import 'package:task_manager/features/auth/data/source/remote/remote_auth.dart';
+import 'package:task_manager/features/auth/domain/usecases/updateInfoUsecase.dart';
+import 'package:task_manager/features/auth/domain/usecases/update_image.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -21,11 +25,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late TextEditingController nameController;
   late TextEditingController proffesionController;
   late TextEditingController emailController;
+
   late CalendarFormat _calendarFormat;
   final ImagePicker _imagePicker = ImagePicker();
   final RegExp mailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   late DateTime dob;
+  late XFile? selectedImage;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -34,13 +40,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     proffesionController = TextEditingController();
     emailController = TextEditingController();
     _calendarFormat = CalendarFormat.twoWeeks;
+    selectedImage = null;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserAuthRepositoryImplementation userAuthRepositoryImplementation =
+        UserAuthRepositoryImplementation(RemoteAuth(ref: ref));
     final userval = ref.watch(userStateProvider);
     final fireAuth = FirebaseAuth.instance;
+    print("the state:${selectedImage == null}");
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -91,11 +102,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       child: userval.when(
                         data: (user) {
                           setState(() {
-                            nameController.text =
-                                user!.username == null ? "" : user.username!;
-                            proffesionController.text =
-                                user.profession == null ? "" : user.profession!;
-                            emailController.text = user.email;
+                            emailController.text = user!.email;
                             dob = user.dob == null ? DateTime.now() : user.dob!;
                           });
                           return Form(
@@ -105,17 +112,29 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () async {
-                                        final selectedImage =
+                                        selectedImage =
                                             await _imagePicker.pickImage(
                                                 source: ImageSource.gallery);
+                                        setState(() {});
+
+                                        // showDialog(
+                                        //     context: context,
+                                        //     builder: (context) => AlertDialog(
+                                        //           content: Image.file(File(
+                                        //               selectedImage!.path)),
+                                        //         ));
                                       },
                                       child: CircleAvatar(
                                         backgroundColor: Colors.blue,
                                         radius: 50,
-                                        backgroundImage: user!.userPfp == null
-                                            ? const AssetImage(
-                                                'lib/core/assets/images/default_profile.png')
-                                            : NetworkImage(user.userPfp!),
+                                        backgroundImage: selectedImage == null
+                                            ? user!.userPfp == null
+                                                ? const AssetImage(
+                                                    'lib/core/assets/images/default_profile.png')
+                                                : NetworkImage(user.userPfp!)
+                                            : FileImage(
+                                                    File(selectedImage!.path))
+                                                as ImageProvider,
                                       ),
                                     ),
                                     const SizedBox(
@@ -359,17 +378,163 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         onPressed: () async {
                                           if (formKey.currentState!
                                               .validate()) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                "Feature Coming Soon",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                              backgroundColor: Colors.red,
-                                            ));
+                                            await Updateinfousecase(
+                                                    userAuthRepository:
+                                                        userAuthRepositoryImplementation)
+                                                .call(proffesionController.text,
+                                                    nameController.text);
+                                            if (selectedImage == null) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      const updateProfileSucces());
+                                              return;
+                                            }
+                                            final res = UpdateImage(
+                                                    userAuthRepositoryImplementation)
+                                                .call(File(selectedImage!.path),
+                                                    user!.uid as String);
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return FutureBuilder(
+                                                      future: res,
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .none) {
+                                                          return AlertDialog(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            content: SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.84,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.3,
+                                                              child: Column(
+                                                                children: [
+                                                                  const Text(
+                                                                    "No connection",
+                                                                    style: TextStyle(
+                                                                        color: Appcolors
+                                                                            .brandColor,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                      style: ButtonStyle(
+                                                                          fixedSize: WidgetStatePropertyAll(Size(
+                                                                              MediaQuery.of(context).size.width *
+                                                                                  0.6,
+                                                                              MediaQuery.of(context).size.height *
+                                                                                  0.07)),
+                                                                          backgroundColor: const WidgetStatePropertyAll(Appcolors
+                                                                              .brandColor),
+                                                                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                  15)))),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Text(
+                                                                          "Back",
+                                                                          style: TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontSize: 20,
+                                                                              fontWeight: FontWeight.w500),
+                                                                        ),
+                                                                      ))
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .waiting) {
+                                                          return AlertDialog(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            content: SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.84,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.3,
+                                                              child: Column(
+                                                                children: [
+                                                                  const CircularProgressIndicator
+                                                                      .adaptive(),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                      style: ButtonStyle(
+                                                                          fixedSize: WidgetStatePropertyAll(Size(
+                                                                              MediaQuery.of(context).size.width *
+                                                                                  0.6,
+                                                                              MediaQuery.of(context).size.height *
+                                                                                  0.07)),
+                                                                          backgroundColor: const WidgetStatePropertyAll(Appcolors
+                                                                              .brandColor),
+                                                                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                  15)))),
+                                                                      onPressed:
+                                                                          () {
+                                                                        //todo Implement canceling
+                                                                      },
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Text(
+                                                                          "cancel",
+                                                                          style: TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontSize: 20,
+                                                                              fontWeight: FontWeight.w500),
+                                                                        ),
+                                                                      ))
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else if (snapshot
+                                                                .connectionState ==
+                                                            ConnectionState
+                                                                .done) {
+                                                          return const updateProfileSucces();
+                                                        }
+                                                        return const Text(
+                                                            'Unkown error');
+                                                      });
+                                                });
                                           }
                                         },
                                         child: const Text(
@@ -480,5 +645,103 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ],
           ),
         ));
+  }
+}
+
+class updateProfileSucces extends StatefulWidget {
+  const updateProfileSucces({
+    super.key,
+  });
+
+  @override
+  State<updateProfileSucces> createState() => _updateProfileSuccesState();
+}
+
+class _updateProfileSuccesState extends State<updateProfileSucces>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 3000));
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
+    _animationController.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      content: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: MediaQuery.of(context).size.width * 0.14,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                color: Appcolors.brandColor.withOpacity(_animation.value),
+              ),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 45,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            const Text(
+              "New profile has been \nsuccessfully updated",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Appcolors.brandColor),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(Size(
+                        MediaQuery.of(context).size.width * 0.6,
+                        MediaQuery.of(context).size.height * 0.07)),
+                    backgroundColor:
+                        const WidgetStatePropertyAll(Appcolors.brandColor),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)))),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("home");
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Back",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }

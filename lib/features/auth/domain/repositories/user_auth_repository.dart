@@ -11,6 +11,7 @@ abstract class UserAuthRepository {
   Future<Either<Failure, auth.UserCredential>> signup(UserModel user);
   Future<Either<Failure, void>> changePassword(String newpass);
   Future<Either<Failure, void>> logout();
-  Future<Either<Failure, void>> updateImage(File newImage);
+  Future<Either<Failure, String>> updateImage(File newImage, String id);
   Future<Either<Failure, void>> resetPassword(String email);
+  Future<Either<Failure, void>> updateInfo(String proffesion, String name);
 }

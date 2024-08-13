@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
 import 'package:task_manager/features/auth/data/source/local/local_user.dart';
+import 'package:task_manager/features/auth/domain/entities/user.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
 
 class RemoteAuth {
@@ -92,6 +91,33 @@ class RemoteAuth {
       return right(Unit);
     } on FirebaseAuthException catch (e) {
       return left(Failure(errMessage: e.code));
+    }
+  }
+
+  Future<Either<Failure, void>> updateUserpfp(String newUrl) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({"userPfp": newUrl});
+      return right(Unit);
+    } catch (e) {
+      return left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> updatecreds(
+      String proffesion, String name) async {
+    late UserModel user;
+    try {
+      final doc = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+      doc.update({"proffesion": proffesion, "username": name});
+      ref.invalidate(userStateProvider);
+      return right(Unit);
+    } catch (e) {
+      return left(Failure(errMessage: e.toString()));
     }
   }
 }

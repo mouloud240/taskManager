@@ -9,7 +9,7 @@ class UpdateImage{
 
   UpdateImage(this.repository);
 
-  Future<Either<Failure, void>> call(File image) async {
-    return repository.updateImage(image);
+  Future<Either<Failure, String>> call(File image,String id) async {
+    return repository.updateImage(image,id);
   }
 }

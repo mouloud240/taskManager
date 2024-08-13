@@ -53,13 +53,12 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
         ),
       ),
-      body: SizedBox.expand(
+      body: SizedBox(
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(),
               const Text(
                 "TASK-WAN",
                 style: TextStyle(
@@ -196,7 +195,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             "email": emailController.text,
                             "password": passwordController.text,
                             "priorityTasks": {},
-                            "dailyTasks": {}
+                            "dailyTasks": {},
                           });
 
                           // LoginUsecase(userauthImpl).call(emailController.text, passwordController.text);
