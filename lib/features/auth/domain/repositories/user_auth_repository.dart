@@ -13,5 +13,5 @@ abstract class UserAuthRepository {
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, String>> updateImage(File newImage, String id);
   Future<Either<Failure, void>> resetPassword(String email);
-  Future<Either<Failure, void>> updateInfo(String proffesion, String name);
+  Future<Either<Failure, void>> updateInfo(String proffesion, String name,DateTime dob);
 }

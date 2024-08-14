@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:task_manager/core/failure/failure.dart';
 import 'package:task_manager/features/auth/data/models/usermodel.dart';
 import 'package:task_manager/features/auth/data/source/local/local_user.dart';
 import 'package:task_manager/features/auth/domain/entities/user.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
+
+DateFormat dateFormat = DateFormat("MMMM d, y 'at' h:mm:ss a");
 
 class RemoteAuth {
   WidgetRef ref;
@@ -107,13 +110,17 @@ class RemoteAuth {
   }
 
   Future<Either<Failure, void>> updatecreds(
-      String proffesion, String name) async {
+      String proffesion, String name, DateTime dob) async {
     late UserModel user;
     try {
       final doc = FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid);
-      doc.update({"proffesion": proffesion, "username": name});
+      doc.update({
+        "proffesion": proffesion,
+        "username": name,
+        "dob": "${dateFormat.format(dob)} UTC+1"
+      });
       ref.invalidate(userStateProvider);
       return right(Unit);
     } catch (e) {

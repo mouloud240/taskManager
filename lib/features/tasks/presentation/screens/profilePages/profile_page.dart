@@ -51,8 +51,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         UserAuthRepositoryImplementation(RemoteAuth(ref: ref));
     final userval = ref.watch(userStateProvider);
     final fireAuth = FirebaseAuth.instance;
-    print("the state:${selectedImage == null}");
-
     return Scaffold(
         resizeToAvoidBottomInset: true,
         body: CustomScrollView(slivers: [
@@ -257,7 +255,153 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return calendarDialog(context);
+                                              return AlertDialog(
+                                                  backgroundColor: Colors.white,
+                                                  content: SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.84,
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TableCalendar(
+                                                          selectedDayPredicate:
+                                                              (day) {
+                                                            return isSameDay(
+                                                                dob, day);
+                                                          },
+                                                          calendarStyle:
+                                                              const CalendarStyle(
+                                                                  todayDecoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .blueGrey,
+                                                                      shape: BoxShape
+                                                                          .circle),
+                                                                  selectedDecoration:
+                                                                      BoxDecoration(
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                  )),
+                                                          daysOfWeekStyle: const DaysOfWeekStyle(
+                                                              weekdayStyle: TextStyle(
+                                                                  color: Appcolors
+                                                                      .textColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                              weekendStyle: TextStyle(
+                                                                  color: Appcolors
+                                                                      .brandColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                          weekendDays: const [
+                                                            DateTime.friday,
+                                                            DateTime.saturday
+                                                          ],
+                                                          onFormatChanged:
+                                                              (newFormat) {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        AlertDialog(
+                                                                          content:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                height: 300,
+                                                                                width: 200,
+                                                                                child: YearPicker(
+                                                                                    firstDate: DateTime.utc(1900),
+                                                                                    lastDate: DateTime.utc(2030),
+                                                                                    selectedDate: dob,
+                                                                                    onChanged: (year) {
+                                                                                      setState(() {
+                                                                                        user!.dob = DateTime.utc(year.year, dob.month, dob.day);
+                                                                                        dob = DateTime.utc(year.year, dob.month, dob.day);
+                                                                                        Navigator.of(context).pop();
+                                                                                      });
+                                                                                    }),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ));
+                                                          },
+                                                          headerStyle:
+                                                              const HeaderStyle(
+                                                                  leftChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_left_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  rightChevronIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .arrow_right_sharp,
+                                                                    color: Appcolors
+                                                                        .brandColor,
+                                                                    size: 40,
+                                                                  ),
+                                                                  titleCentered:
+                                                                      true,
+                                                                  formatButtonVisible:
+                                                                      true,
+                                                                  formatButtonTextStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight: FontWeight
+                                                                          .w500),
+                                                                  formatButtonDecoration: BoxDecoration(
+                                                                      color: Appcolors
+                                                                          .brandColor,
+                                                                      borderRadius:
+                                                                          BorderRadius.all(Radius.circular(
+                                                                              10))),
+                                                                  titleTextStyle: TextStyle(
+                                                                      color: Appcolors
+                                                                          .brandColor,
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600)),
+                                                          focusedDay: dob,
+                                                          firstDay:
+                                                              DateTime.utc(
+                                                                  1900, 01, 01),
+                                                          lastDay: DateTime.utc(
+                                                              2030, 12, 12),
+                                                          onDaySelected:
+                                                              (selectedDay,
+                                                                  focusDay) {
+                                                            setState(() {
+                                                              user!.dob =
+                                                                  selectedDay;
+
+                                                              dob = selectedDay;
+
+                                                              focusDay =
+                                                                  selectedDay;
+                                                            });
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ));
                                             });
                                       },
                                       child: Padding(
@@ -382,7 +526,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     userAuthRepository:
                                                         userAuthRepositoryImplementation)
                                                 .call(proffesionController.text,
-                                                    nameController.text);
+                                                    nameController.text, dob);
                                             if (selectedImage == null) {
                                               showDialog(
                                                   context: context,
@@ -553,98 +697,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         loading: () => const CircularProgressIndicator(),
                       ))))
         ]));
-  }
-
-  AlertDialog calendarDialog(BuildContext context) {
-    return AlertDialog(
-        backgroundColor: Colors.white,
-        content: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.84,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TableCalendar(
-                selectedDayPredicate: (day) {
-                  return isSameDay(dob, day);
-                },
-                calendarStyle: const CalendarStyle(
-                    todayDecoration: BoxDecoration(
-                        color: Colors.blueGrey, shape: BoxShape.circle),
-                    selectedDecoration: BoxDecoration(
-                      color: Appcolors.brandColor,
-                      shape: BoxShape.circle,
-                    )),
-                daysOfWeekStyle: const DaysOfWeekStyle(
-                    weekdayStyle: TextStyle(
-                        color: Appcolors.textColor,
-                        fontWeight: FontWeight.w500),
-                    weekendStyle: TextStyle(
-                        color: Appcolors.brandColor,
-                        fontWeight: FontWeight.w500)),
-                weekendDays: const [DateTime.friday, DateTime.saturday],
-                onFormatChanged: (newFormat) {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  height: 300,
-                                  width: 200,
-                                  child: YearPicker(
-                                      firstDate: DateTime.utc(1900),
-                                      lastDate: DateTime.utc(2030),
-                                      selectedDate: dob,
-                                      onChanged: (year) {
-                                        setState(() {
-                                          dob = DateTime.utc(
-                                              year.year, dob.month, dob.day);
-                                          Navigator.of(context).pop();
-                                        });
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ));
-                },
-                headerStyle: const HeaderStyle(
-                    leftChevronIcon: Icon(
-                      Icons.arrow_left_sharp,
-                      color: Appcolors.brandColor,
-                      size: 40,
-                    ),
-                    rightChevronIcon: Icon(
-                      Icons.arrow_right_sharp,
-                      color: Appcolors.brandColor,
-                      size: 40,
-                    ),
-                    titleCentered: true,
-                    formatButtonVisible: true,
-                    formatButtonTextStyle: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w500),
-                    formatButtonDecoration: BoxDecoration(
-                        color: Appcolors.brandColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    titleTextStyle: TextStyle(
-                        color: Appcolors.brandColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600)),
-                focusedDay: dob,
-                firstDay: DateTime.utc(1900, 01, 01),
-                lastDay: DateTime.utc(2030, 12, 12),
-                onDaySelected: (selectedDay, focusDay) {
-                  setState(() {
-                    dob = selectedDay;
-
-                    focusDay = selectedDay;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ));
   }
 }
 

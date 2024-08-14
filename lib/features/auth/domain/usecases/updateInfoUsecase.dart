@@ -5,7 +5,7 @@ import 'package:task_manager/features/auth/domain/repositories/user_auth_reposit
 class Updateinfousecase {
   UserAuthRepository userAuthRepository;
   Updateinfousecase({required this.userAuthRepository});
-  Future<Either<Failure, void>> call(String proffesion, String name) {
-    return userAuthRepository.updateInfo(proffesion, name);
+  Future<Either<Failure, void>> call(String proffesion, String name,DateTime dob) {
+    return userAuthRepository.updateInfo(proffesion, name,dob);
   }
 }

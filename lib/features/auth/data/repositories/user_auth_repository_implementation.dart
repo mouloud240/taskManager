@@ -56,7 +56,7 @@ class UserAuthRepositoryImplementation implements UserAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateInfo(String proffesion, String name) {
-    return remoteAuth.updatecreds(proffesion, name);
+  Future<Either<Failure, void>> updateInfo(String proffesion, String name, DateTime dob) {
+    return remoteAuth.updatecreds(proffesion, name,dob);
   }
 }
