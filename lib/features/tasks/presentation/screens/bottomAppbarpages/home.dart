@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/core/colors.dart';
 import 'package:task_manager/features/auth/presentation/state/userState.dart';
+import 'package:task_manager/features/tasks/data/repositories/taskManagement_repository_implementation.dart';
+import 'package:task_manager/features/tasks/data/source/local/local_data_source.dart';
+import 'package:task_manager/features/tasks/data/source/remote/remote_data_source.dart';
+import 'package:task_manager/features/tasks/domain/usecases/deletes.dart';
 import 'package:task_manager/features/tasks/presentation/state/TasksState.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/Daily_taskTile.dart';
 import 'package:task_manager/features/tasks/presentation/widgets/Priority_taskTile.dart';
@@ -19,6 +23,9 @@ class _HomeState extends ConsumerState<Home> {
     final userValue = ref.watch(userStateProvider);
     final dailyValue = ref.watch(dailyTasksStateProvider(ref));
     final priorityValue = ref.watch(priorityTasksStateProvider(ref));
+    final taskmanagementRepo = TaskmanagementRepositoryImplementation(
+        localDataSource: LocalDataSource(),
+        remoteDataSource: RemoteDataSource(ref));
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -35,7 +42,7 @@ class _HomeState extends ConsumerState<Home> {
                 if (data == null) {
                   return const Text("No user 404 Error");
                 }
-                String name = getFirstWord(data .username);
+                String name = getFirstWord(data.username);
 
                 return Text(
                   "Welcome $name",
@@ -107,6 +114,12 @@ class _HomeState extends ConsumerState<Home> {
                       shrinkWrap: true,
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
+                        if (tasks[index].endDate.compareTo(DateTime.now()) <
+                            0) {
+                          DeleteDailyTaskUsecase(taskmanagementRepo)
+                              .call(tasks[index]);
+                          return null;
+                        }
                         return DailyTasktile(dailyTask: tasks[index]);
                       });
                 });
